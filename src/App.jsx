@@ -9,7 +9,6 @@ const NewPlantPage = lazy(() => import("./pages/NewPlantPage.jsx"))
 const EditPlantPage = lazy(() => import("./pages/EditPlantPage.jsx"))
 
 function App() {
-
   return (
     <>
       <Header/>

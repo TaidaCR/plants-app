@@ -111,3 +111,9 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+input{
+  border: 2px solid #dbdbdb;
+  border-radius:5px;
+  padding:5px;
+}
