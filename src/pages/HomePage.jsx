@@ -1,10 +1,11 @@
-import plants from '../data/plants.json'
+// import plants from '../data/plants.json'
 import { NavLink } from 'react-router-dom'
 import {useState} from 'react'
 import {useChangeTitle} from '../hooks/setPageTitle.jsx'
-
+import { usePlantStore } from '../store/usePlantStore.js'
 
 export default function HomePage() {
+    const plants = usePlantStore((state) => state.plants)
 
     const locationListSet = [...new Set(plants.map(plant => plant.location))]
     const [locationFilter, setLocationFilter] = useState("0")

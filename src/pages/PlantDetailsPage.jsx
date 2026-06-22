@@ -1,33 +1,21 @@
 import { useParams } from 'react-router-dom'
-import plants from '../data/plants.json'
-import { useState } from 'react'
+// import plants from '../data/plants.json'
 import { NavLink } from 'react-router-dom'
-import Button from '../Components/Button.jsx'
 import { useChangeTitle } from '../hooks/setPageTitle.jsx'
+import ActionPanel from '../Components/ActionPanel.jsx'
+import { usePlantStore } from '../store/usePlantStore.js'
 
 export default function PlantDetails(){
 
     const {id} = useParams()
-    const plant = plants.find((p) => p.id === id)
+    const plant = usePlantStore((state) => state.plants.find((p) => p.id === id))
 
     useChangeTitle(`Detalles de ${plant.name}`)   
 
-    const [waterRecord, setWaterRecord] = useState(plant.waterRecord)
-    const [fertilizerRecord, setFertilizerRecord] = useState(plant.fertilizerRecord)
-
-    let today = new Date()
-    const todayFormatted = today.toLocaleDateString('en-GB').replace(/\//g, '-');
-
-    const handleWaterSubmit = () => {
-        setWaterRecord(waterRecord.concat(todayFormatted))
-    }
-
-    const handleFertilizerSubmit = () => {
-        setFertilizerRecord(fertilizerRecord.concat(todayFormatted))
-    }
+    const plantAcq = new Date(plant.acquisition).toLocaleDateString('es-ES')
 
     if (!plant){
-        <div>La planta no existe</div>
+        return <div>La planta no existe</div>
     }
 
     //SIMULAR TIMEOUT COMO SI COGIERA DE API Y CARGANDO
@@ -43,15 +31,17 @@ export default function PlantDetails(){
                 </NavLink>
             </div>
             <div className="p-[20px]">
-                <p  className="pb-[10px]">Fecha de compra: {plant.acquisition}</p>
-                <p className="pb-[10px]">Último riego: {waterRecord[waterRecord.length - 1]}</p>
-                <p className="pb-[10px]">Último riego: {fertilizerRecord[fertilizerRecord.length - 1]}</p>
+                <p  className="pb-[10px]">Fecha de compra: {plantAcq}</p>
             </div>
             <div className="col-span-3 justify-around flex mt-[20px]">
-                {/* Componetizarlo para que sólo renderice esto y no todo plantDetails */}
-                <Button handleClick={handleWaterSubmit} text="Regar"/>
-                <Button handleClick={handleFertilizerSubmit} text="Fertilizar"/>
+                {/* Componetizado para que sólo renderice esto y no todo plantDetails */}
+                <ActionPanel plantId={plant.id} plantWaterRecord={plant.waterRecord}/>
             </div>
+        </section>
+        <section className="p-[20px]"> 
+            <p>
+                {plant.notes}
+            </p>
         </section>
         <section className="flex flex-col gap-[15px] p-[20px]">
             {plant.comments.map((comment) => {
@@ -64,11 +54,7 @@ export default function PlantDetails(){
             }
             )}
         </section>
-        <section className="p-[20px]"> 
-            <p>
-                {plant.notes}
-            </p>
-        </section>
+        
         </main>
     )
 }

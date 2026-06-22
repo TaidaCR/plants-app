@@ -4,20 +4,20 @@
     "name": "Monstera Deliciosa",
     "location": "salon",
     "imageUrl": "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&q=80&w=600",
-    "acquisition": "12-04-2025",
-    "waterRecord": ["10-06-2026"],
-    "fertilizerRecord": ["01-06-2026"],
+    "acquisition": "2025-04-12",
+    "waterRecord": ["2026-06-10"],
+    "fertilizerRecord": ["2026-06-01"],
     "sick": false,
     "notes": "Vigilar que las raíces no se salgan por los agujeros de drenaje, tocará trasplante en primavera.",
     "comments": [
       {
         "id": "1-1",
-        "date": "20-05-2026",
+        "date": "2026-05-20",
         "text": "Le ha salido una hoja nueva gigante con tres fenestraciones."
       },
       {
         "id": "1-2",
-        "date": "02-06-2026",
+        "date": "2026-06-02",
         "text": "Limpieza de hojas realizada con un paño húmedo."
       }
     ],
@@ -32,7 +32,7 @@
     },
     "fertilization": {
       "frequencyDays": 15,
-      "lastApplication": "01-06-2026",
+      "lastApplication": "2026-06-01",
       "type": "líquido orgánico"
     },
     "misting": {
@@ -45,15 +45,15 @@
     "name": "Pothos Neon",
     "location": "salon",
     "imageUrl": "https://images.unsplash.com/photo-1596547609652-9cf5d8d76921?auto=format&fit=crop&q=80&w=600",
-    "acquisition": "01-09-2025",
-    "waterRecord": ["14-06-2026"],
-    "fertilizerRecord": ["15-05-2026"],
+    "acquisition": "2025-09-01",
+    "waterRecord": ["2026-06-14"],
+    "fertilizerRecord": ["2026-05-15"],
     "sick": false,
     "notes": "Crece muy rápido en esta ubicación gracias a la humedad ambiental de la cocina.",
     "comments": [
       {
         "id": "2-1",
-        "date": "10-04-2026",
+        "date": "2026-04-10",
         "text": "He cortado dos esquejes para propagar en agua."
       }
     ],
@@ -68,7 +68,7 @@
     },
     "fertilization": {
       "frequencyDays": 30,
-      "lastApplication": "15-05-2026",
+      "lastApplication": "2026-05-15",
       "type": "universal"
     },
     "misting": {
@@ -81,20 +81,20 @@
     "name": "Calathea Orbifolia",
     "location": "baño",
     "imageUrl": "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&q=80&w=600",
-    "acquisition": "20-01-2026",
-    "waterRecord": ["12-06-2026"],
-    "fertilizerRecord": ["28-05-2026"],
+    "acquisition": "2026-01-20",
+    "waterRecord": ["2026-06-12"],
+    "fertilizerRecord": ["2026-05-28"],
     "sick": true,
     "notes": "Tiene los bordes de las hojas crujientes y marrones, sospecho que es por falta de humedad o exceso de sales.",
     "comments": [
       {
         "id": "3-1",
-        "date": "05-06-2026",
+        "date": "2026-06-05",
         "text": "Puntas quemadas detectadas. He decidido cambiarla al baño para aprovechar el vapor de la ducha."
       },
       {
         "id": "3-2",
-        "date": "11-06-2026",
+        "date": "2026-06-11",
         "text": "Aplicado tratamiento preventivo con jabón potásico por posible araña roja."
       }
     ],
@@ -109,7 +109,7 @@
     },
     "fertilization": {
       "frequencyDays": 20,
-      "lastApplication": "28-05-2026",
+      "lastApplication": "2026-05-28",
       "type": "plantas verdes"
     },
     "misting": {
@@ -122,15 +122,15 @@
     "name": "Ficus Lyrata",
     "location": "estudio",
     "imageUrl": "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&q=80&w=600",
-    "acquisition": "15-11-2024",
-    "waterRecord": ["08-06-2026"],
-    "fertilizerRecord": ["01-06-2026"],
+    "acquisition": "2024-11-15",
+    "waterRecord": ["2026-06-08"],
+    "fertilizerRecord": ["2026-06-01"],
     "sick": false,
     "notes": "Odia las corrientes de aire. No mover de su sitio actual porque se le caen las hojas inferiores.",
     "comments": [
       {
         "id": "4-1",
-        "date": "01-03-2026",
+        "date": "2026-03-01",
         "text": "Comienza la temporada de crecimiento, se nota el aumento de luz en el estudio."
       }
     ],
@@ -145,7 +145,7 @@
     },
     "fertilization": {
       "frequencyDays": 15,
-      "lastApplication": "01-06-2026",
+      "lastApplication": "2026-06-01",
       "type": "barritas de liberación lenta"
     },
     "misting": {
@@ -158,15 +158,15 @@
     "name": "Olivo en maceta",
     "location": "patio",
     "imageUrl": "https://images.unsplash.com/photo-1545241047-6083a3684587?auto=format&fit=crop&q=80&w=600",
-    "acquisition": "10-05-2025",
-    "waterRecord": ["15-06-2026"],
-    "fertilizerRecord": ["20-05-2026"],
+    "acquisition": "2025-05-10",
+    "waterRecord": ["2026-06-15"],
+    "fertilizerRecord": ["2026-05-20"],
     "sick": false,
     "notes": "Sustrato con excelente drenaje. Tolera bien el sol directo del mediodía.",
     "comments": [
       {
         "id": "5-1",
-        "date": "01-05-2026",
+        "date": "2026-05-01",
         "text": "Ha florecido bastante este año, revisar si cuaja alguna oliva."
       }
     ],
@@ -181,7 +181,7 @@
     },
     "fertilization": {
       "frequencyDays": 30,
-      "lastApplication": "20-05-2026",
+      "lastApplication": "2026-05-20",
       "type": "granulado nitrofoska"
     },
     "misting": {
