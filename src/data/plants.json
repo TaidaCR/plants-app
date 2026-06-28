@@ -3,10 +3,12 @@
     "id": "1",
     "name": "Monstera Deliciosa",
     "location": "salon",
-    "imageUrl": "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&q=80&w=600",
+    "imageUrls": [
+      "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&q=80&w=600",
+      "https://images.unsplash.com/photo-1545167622-3a6ac756afa4?auto=format&fit=crop&q=80&w=600",
+      "https://images.unsplash.com/photo-1581084324492-c8076f130f86?auto=format&fit=crop&q=80&w=600"
+    ],
     "acquisition": "2025-04-12",
-    "waterRecord": ["2026-06-10"],
-    "fertilizerRecord": ["2026-06-01"],
     "sick": false,
     "notes": "Vigilar que las raíces no se salgan por los agujeros de drenaje, tocará trasplante en primavera.",
     "comments": [
@@ -19,9 +21,50 @@
         "id": "1-2",
         "date": "2026-06-02",
         "text": "Limpieza de hojas realizada con un paño húmedo."
+      },
+      {
+        "id": "1-3",
+        "date": "2026-06-18",
+        "text": "Está desarrollando raíces aéreas muy largas, casi tocan el suelo."
+      },
+      {
+        "id": "1-4",
+        "date": "2026-06-25",
+        "text": "He tenido que atar algunos tallos al tutor, se estaban desparramando."
+      },
+      {
+        "id": "1-5",
+        "date": "2026-07-02",
+        "text": "Las raíces aéreas están empezando a lignificarse, se ven más fuertes."
+      },
+      {
+        "id": "1-6",
+        "date": "2026-07-10",
+        "text": "Noto que las hojas nuevas vienen más pequeñas, quizá necesita más luz."
+      },
+      {
+        "id": "1-7",
+        "date": "2026-07-18",
+        "text": "He limpiado el polvo de las hojas grandes con cerveza, brillan mucho."
+      },
+      {
+        "id": "1-8",
+        "date": "2026-07-25",
+        "text": "Apareció una hoja completamente blanca, espero que no se queme con el sol."
+      },
+      {
+        "id": "1-9",
+        "date": "2026-08-05",
+        "text": "La hoja blanca sigue intacta, está cogiendo un tono crema precioso."
+      },
+      {
+        "id": "1-10",
+        "date": "2026-08-15",
+        "text": "Comienza a asomar la quinta hoja nueva del verano, excelente ritmo de crecimiento."
       }
     ],
     "watering": {
+      "waterRecord": ["2026-06-10"],
       "frequencyDays": 7,
       "amount": "abundante",
       "waterType": "reposada"
@@ -32,22 +75,28 @@
     },
     "fertilization": {
       "frequencyDays": 15,
+      "fertilizerRecord": ["2026-06-01"],
       "lastApplication": "2026-06-01",
-      "type": "líquido orgánico"
+      "fertilizationInfo": "Abono líquido de origen orgánico rico en nitrógeno y materia orgánica, diluido en el agua de riego a la mitad de la dosis recomendada por el fabricante para evitar la acumulación de sales en el sustrato."
     },
     "misting": {
       "required": true,
       "frequencyDays": 3
+    },
+    "treatment": {
+      "frequencyDays": 0,
+      "treatmentRecord": [],
+      "treatmentInfo": ""
     }
   },
   {
     "id": "2",
     "name": "Pothos Neon",
     "location": "salon",
-    "imageUrl": "https://images.unsplash.com/photo-1596547609652-9cf5d8d76921?auto=format&fit=crop&q=80&w=600",
+    "imageUrls": [
+      "https://images.unsplash.com/photo-1596547609652-9cf5d8d76921?auto=format&fit=crop&q=80&w=600"
+    ],
     "acquisition": "2025-09-01",
-    "waterRecord": ["2026-06-14"],
-    "fertilizerRecord": ["2026-05-15"],
     "sick": false,
     "notes": "Crece muy rápido en esta ubicación gracias a la humedad ambiental de la cocina.",
     "comments": [
@@ -55,9 +104,15 @@
         "id": "2-1",
         "date": "2026-04-10",
         "text": "He cortado dos esquejes para propagar en agua."
+      },
+      {
+        "id": "2-2",
+        "date": "2026-06-20",
+        "text": "Los esquejes ya tienen raíces de 5 cm, los he plantado en sustrato."
       }
     ],
     "watering": {
+      "waterRecord": ["2026-06-14"],
       "frequencyDays": 5,
       "amount": "moderada",
       "waterType": "grifo"
@@ -67,23 +122,30 @@
       "recommendedHours": 4
     },
     "fertilization": {
+      "fertilizerRecord": ["2026-05-15"],
       "frequencyDays": 30,
       "lastApplication": "2026-05-15",
-      "type": "universal"
+      "fertilizationInfo": "Fertilizante líquido universal con un equilibrio NPK estándar. Se aplica una vez al mes durante la temporada de crecimiento para mantener el color verde neón vibrante y promover el desarrollo foliar continuo."
     },
     "misting": {
       "required": false,
       "frequencyDays": 0
+    },
+    "treatment": {
+      "frequencyDays": 0,
+      "treatmentRecord": [],
+      "treatmentInfo": ""
     }
   },
   {
     "id": "3",
     "name": "Calathea Orbifolia",
     "location": "baño",
-    "imageUrl": "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&q=80&w=600",
+    "imageUrls": [
+      "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&q=80&w=600",
+      "https://images.unsplash.com/photo-1628155930542-3c7a64e2c833?auto=format&fit=crop&q=80&w=600"
+    ],
     "acquisition": "2026-01-20",
-    "waterRecord": ["2026-06-12"],
-    "fertilizerRecord": ["2026-05-28"],
     "sick": true,
     "notes": "Tiene los bordes de las hojas crujientes y marrones, sospecho que es por falta de humedad o exceso de sales.",
     "comments": [
@@ -96,9 +158,15 @@
         "id": "3-2",
         "date": "2026-06-11",
         "text": "Aplicado tratamiento preventivo con jabón potásico por posible araña roja."
+      },
+      {
+        "id": "3-3",
+        "date": "2026-06-22",
+        "text": "Las hojas nuevas vienen con buen color, parece que el cambio de ubicación le sienta bien."
       }
     ],
     "watering": {
+      "waterRecord": ["2026-06-12"],
       "frequencyDays": 4,
       "amount": "abundante",
       "waterType": "destilada"
@@ -108,23 +176,29 @@
       "recommendedHours": 3
     },
     "fertilization": {
+      "fertilizerRecord": ["2026-05-28"],
       "frequencyDays": 20,
       "lastApplication": "2026-05-28",
-      "type": "plantas verdes"
+      "fertilizationInfo": "Abono específico para plantas verdes de interior, con quelatos de hierro añadidos para prevenir la clorosis. Dado que las calatheas son extremadamente sensibles a las quemaduras por raíces, se usa de forma muy diluida y siempre aplicando un riego previo con agua destilada limpia."
     },
     "misting": {
       "required": true,
       "frequencyDays": 1
+    },
+    "treatment": {
+      "frequencyDays": 7,
+      "treatmentRecord": ["2026-06-11"],
+      "treatmentInfo": "Jabón potásico preventivo"
     }
   },
   {
     "id": "4",
     "name": "Ficus Lyrata",
     "location": "estudio",
-    "imageUrl": "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&q=80&w=600",
+    "imageUrls": [
+      "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&q=80&w=600"
+    ],
     "acquisition": "2024-11-15",
-    "waterRecord": ["2026-06-08"],
-    "fertilizerRecord": ["2026-06-01"],
     "sick": false,
     "notes": "Odia las corrientes de aire. No mover de su sitio actual porque se le caen las hojas inferiores.",
     "comments": [
@@ -135,6 +209,7 @@
       }
     ],
     "watering": {
+      "waterRecord": ["2026-06-08"],
       "frequencyDays": 10,
       "amount": "moderada",
       "waterType": "reposada"
@@ -144,33 +219,34 @@
       "recommendedHours": 6
     },
     "fertilization": {
+      "fertilizerRecord": ["2026-06-01"],
       "frequencyDays": 15,
       "lastApplication": "2026-06-01",
-      "type": "barritas de liberación lenta"
+      "fertilizationInfo": "Nutrición mediante barritas de liberación lenta enterradas en el sustrato cerca del borde de la maceta. Liberan los nutrientes de forma controlada y gradual con cada riego sucesivo, reduciendo la necesidad de abonado líquido frecuente."
     },
     "misting": {
       "required": true,
       "frequencyDays": 7
+    },
+    "treatment": {
+      "frequencyDays": 0,
+      "treatmentRecord": [],
+      "treatmentInfo": ""
     }
   },
   {
     "id": "5",
     "name": "Olivo en maceta",
     "location": "patio",
-    "imageUrl": "https://images.unsplash.com/photo-1545241047-6083a3684587?auto=format&fit=crop&q=80&w=600",
+    "imageUrls": [
+      "https://images.unsplash.com/photo-1545241047-6083a3684587?auto=format&fit=crop&q=80&w=600"
+    ],
     "acquisition": "2025-05-10",
-    "waterRecord": ["2026-06-15"],
-    "fertilizerRecord": ["2026-05-20"],
     "sick": false,
     "notes": "Sustrato con excelente drenaje. Tolera bien el sol directo del mediodía.",
-    "comments": [
-      {
-        "id": "5-1",
-        "date": "2026-05-01",
-        "text": "Ha florecido bastante este año, revisar si cuaja alguna oliva."
-      }
-    ],
+    "comments": [],
     "watering": {
+      "waterRecord": ["2026-06-15"],
       "frequencyDays": 3,
       "amount": "moderada",
       "waterType": "grifo"
@@ -180,13 +256,19 @@
       "recommendedHours": 8
     },
     "fertilization": {
+      "fertilizerRecord": ["2026-05-20"],
       "frequencyDays": 30,
       "lastApplication": "2026-05-20",
-      "type": "granulado nitrofoska"
+      "fertilizationInfo": "Fertilizante granulado de liberación controlada tipo Nitrofoska, esparcido uniformemente sobre la superficie del sustrato. Aporta macronutrientes esenciales ideales para árboles leñosos de exterior que soportan largas jornadas de sol directo."
     },
     "misting": {
       "required": false,
       "frequencyDays": 0
+    },
+    "treatment": {
+      "frequencyDays": 0,
+      "treatmentRecord": [],
+      "treatmentInfo": ""
     }
   }
 ]

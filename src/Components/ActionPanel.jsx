@@ -1,25 +1,21 @@
 import Button from '../Components/Button.jsx'
 // import {useState} from 'react'
 import {usePlantStore} from '../store/usePlantStore.js'
+import sprayImg from '../assets/spray.svg'
+import pillImg from '../assets/pill.svg'
+import dropImg from '../assets/drop.svg'
 
-export default function ActionPanel({plantId}) {
-    
+export default function ActionPanel({plant}) {
     //Lo traemos aquí para que no renderice todo plantDetails cada vez que pulsamos un botón
-    const {waterPlant, fertilizePlant} = usePlantStore()
-
-    const plant = usePlantStore((state) => state.plants.find((p) => p.id === plantId))
-
-    const lastWater = plant.waterRecord[plant.waterRecord.length - 1]
-    const lastFertilizer = plant.fertilizerRecord[plant.fertilizerRecord.length - 1]
+    const {waterPlant, fertilizePlant, treatPlant} = usePlantStore()
 
     return(
         <>
-            <div>
-                <p className="pb-[10px]">Último riego: {lastWater}</p>
-                <p className="pb-[10px]">Último riego: {lastFertilizer}</p>
+            <div className="shadow-md fixed bottom-[65px] actions-section bg-white rounded justify-self-center rounded-md col-span-3 justify-around flex gap-[10px] pr-[20px] pl-[20px]">
+                <Button imgUrl={dropImg} handleClick={() => waterPlant(plant.id)} text="Regar"/>
+                <Button imgUrl={sprayImg} handleClick={() => fertilizePlant(plant.id)} text="Fertilizar"/>
+                <Button className={`${plant.sick ? "" : "hidden"}`} imgUrl={pillImg} handleClick={() => treatPlant(plant.id)} text="Tratar"/>
             </div>
-                <Button handleClick={() => waterPlant(plantId)} text="Regar"/>
-                <Button handleClick={() => fertilizePlant(plantId)} text="Fertilizar"/>
         </>
     )
 }

@@ -1,5 +1,5 @@
 import Header from './Components/Header'
-import Footer from './Components/Footer'
+// import Footer from './Components/Footer'
 import { Routes, Route } from 'react-router-dom'
 import { lazy, Suspense} from 'react'
 
@@ -7,6 +7,7 @@ const HomePage = lazy(() => import("./pages/HomePage.jsx"))
 const PlantDetailsPage = lazy(() => import("./pages/PlantDetailsPage.jsx"))
 const NewPlantPage = lazy(() => import("./pages/NewPlantPage.jsx"))
 const EditPlantPage = lazy(() => import("./pages/EditPlantPage.jsx"))
+const CarePlantsPage = lazy(() => import("./pages/CarePlantsPage.jsx"))
 
 function App() {
   return (
@@ -18,10 +19,11 @@ function App() {
         <Route path="/plantdetails/:id" element={<PlantDetailsPage/>}/>
         <Route path="/newplant" element={<NewPlantPage/>}/>
         <Route path="/editplant/:id" element={<EditPlantPage/>}/>
+        <Route path="/careplants" element={<CarePlantsPage/>}></Route>
       </Routes>
       </Suspense>
      
-      <Footer/>
+      {/* <Footer/> */}
     </>
   )
 }

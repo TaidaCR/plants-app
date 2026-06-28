@@ -1,60 +1,148 @@
 import { useParams } from 'react-router-dom'
-// import plants from '../data/plants.json'
 import { NavLink } from 'react-router-dom'
+import * as Switch from '@radix-ui/react-switch'
 import { useChangeTitle } from '../hooks/setPageTitle.jsx'
-import ActionPanel from '../Components/ActionPanel.jsx'
 import { usePlantStore } from '../store/usePlantStore.js'
+import ActionPanel from '../Components/ActionPanel.jsx'
+import InfoPill from '../Components/InfoPill.jsx'
+import editImg from '../assets/edit.svg'
+import arrowImg from '../assets/arrowBack.svg'
+import plusImg from '../assets/plus.svg'
 
 export default function PlantDetails(){
-
+    const{updatePlant} = usePlantStore()
     const {id} = useParams()
     const plant = usePlantStore((state) => state.plants.find((p) => p.id === id))
-
+    const today = new Date()
+    const todayISO = today.toISOString().split('T')[0]
     useChangeTitle(`Detalles de ${plant.name}`)   
-
-    const plantAcq = new Date(plant.acquisition).toLocaleDateString('es-ES')
 
     if (!plant){
         return <div>La planta no existe</div>
     }
 
+    const plantAcq = new Date(plant.acquisition).toLocaleDateString('es-ES')
+    const lastWater = plant.watering.waterRecord?.length > 0 ? plant.watering.waterRecord[plant.watering.waterRecord.length - 1] : null
+    const lastFertilizer = plant.fertilization.fertilizerRecord?.length > 0 ? plant.fertilization.fertilizerRecord[plant.fertilization.fertilizerRecord.length - 1] : null
+    const lastTreatment = plant.treatment.treatmentRecord?.length > 0 ? plant.treatment.treatmentRecord[plant.treatment.treatmentRecord.length - 1] : null
+
+    const getDaysDifference = (lastDayValue) =>{
+        
+        const lastDay = new Date(lastDayValue)
+
+        today.setHours(0,0,0,0)
+        lastDay.setHours(0,0,0,0)
+
+        const difference = today.getTime() - lastDay.getTime()
+        const differenceInDays = Math.floor(difference / (1000*60*60*24))
+
+        return differenceInDays
+    }
+
+    const lastWateredInDays = lastWater ? getDaysDifference(lastWater) : null
+    const lastFertilizedInDays = lastFertilizer ? getDaysDifference(lastFertilizer) : null
+    const lastTreatedInDays = lastTreatment ? getDaysDifference(lastTreatment) : null
+
+    const handleToggleSick = (checked) => {
+
+        const updatedPlant = {
+            ...plant,
+            sick: checked
+        }
+
+        updatePlant(plant.id, updatedPlant)
+    }
+
+    console.log("lastWater" + lastWater)
+    console.log(today)
+    console.log(todayISO)
+
     //SIMULAR TIMEOUT COMO SI COGIERA DE API Y CARGANDO
 
     return(
-        <main>
-        <section className="grid grid-cols-2 p-[20px]">
-            <div className="p-[20px] relative">
-                <h1>{plant.name}</h1>
-                <img className="aspect-square" src={plant.imageUrl} alt={`Foto de ${plant.name}`}/>
-                <NavLink to={`/editplant/${id}`} className="absolute rounded-full bottom-[3px] right-[3px] pt-[20px] pb-[20px] pr-[10px] pl-[10px] bg-green-500">
-                    Editar
+        <main className="pb-[140px] pt-[70px]">
+            {/* BARRA SUPERIOR ATRAS/NOMBRE/EDITAR */}
+            <header className="fixed z-3 flex pt-[5px] pb-[5px] pr-[15px] pl-[15px] justify-between items-center w-full bg-secondary shadow top-0">
+                <NavLink to='/' className="">
+                    <img width="25px" height="25px" src={arrowImg} />
                 </NavLink>
+                <h1 className="flex"> {plant.name}</h1>
+                <NavLink to={`/editplant/${id}`} className="rounded-full p-[10px] h-fit bg-primary">
+                    <img width="25px" height="25px" src={editImg} />
+                </NavLink>
+            </header>
+
+            {/* IMÁGENES */}
+            <div className="flex gap-0 p-[20px] overflow-x-auto grid grid-cols-4 snap-x snap-mandatory">
+                {plant.imageUrls.map((url, i) => (
+                <img key={i} className="aspect-square rounded-lg shadow shrink-0 w-[90%] snap-center" src={url} alt={`Foto ${i + 1} de ${plant.name}`}/>
+                ))}
+                <div className="aspect-square rounded-lg shrink-0 w-[90%] span-center justify-center align-center flex"><img src={plusImg} width="40px" height="40px"/></div>
             </div>
-            <div className="p-[20px]">
-                <p  className="pb-[10px]">Fecha de compra: {plantAcq}</p>
-            </div>
-            <div className="col-span-3 justify-around flex mt-[20px]">
-                {/* Componetizado para que sólo renderice esto y no todo plantDetails */}
-                <ActionPanel plantId={plant.id} plantWaterRecord={plant.waterRecord}/>
-            </div>
-        </section>
-        <section className="p-[20px]"> 
-            <p>
-                {plant.notes}
-            </p>
-        </section>
-        <section className="flex flex-col gap-[15px] p-[20px]">
-            {plant.comments.map((comment) => {
-                    return(
-                        <article id={comment.id} className="bg-cyan-400 p-[15px]">
-                            <span>{comment.date}</span>
-                            <p>{comment.text}</p>
-                        </article>
-                                    )
-            }
-            )}
-        </section>
-        
+            
+            {/* FICHA TECNICA */}
+            <section className="p-[20px] bg-[#f2f4f2] m-3 rounded-4xl text-left gap-[10px] flex flex-col">
+                <h2 className="uppercase text-dark">Info general</h2>
+                <InfoPill text="Fecha de compra" value={plantAcq}/>
+                <InfoPill text="Localización" value={plant.location}/>
+                <h2 className="uppercase text-dark">Riego</h2>
+                <InfoPill text="Frecuencia de riego:" value={plant.watering.frequencyDays}/>
+                <InfoPill text="Último riego:" value={lastWater ? (lastWater === todayISO ? "Hoy" : `Hace ${lastWateredInDays} días`) : "Sin riegos"}/>
+
+                <h2 className="uppercase text-dark">Fertilización</h2>
+                <InfoPill text="Frecuencia de fertilización:" value={plant.fertilization.frequencyDays}/>
+                <InfoPill text="Última fertilización:" value={lastFertilizer ? (lastFertilizer === todayISO ? "Hoy" : `Hace ${lastFertilizedInDays} días`) : "Sin fertilizar"}/>
+                <p className="pb-[10px] bg-white p-3 rounded-xl flex justify-between font-normal text-detail">{plant.fertilization.fertilizationInfo}</p>
+
+                
+                <h2 className="uppercase text-dark">Tratamientos</h2>
+                <div className="pb-[10px] bg-white rounded-xl flex flex-col justify-between font-normal text-detail">
+                    <div className="flex justify-between p-3">
+                        <p>Enferma:</p>
+                        <Switch.Root checked={plant.sick} onCheckedChange={handleToggleSick} className="w-11 h-6 bg-gray-300 data-[state=checked]:bg-green-500 rounded-full relative transition-colors duration-200 ease-in-out outline-none cursor-pointer">
+                            <Switch.Thumb className="block w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-200 ease-in-out translate-x-0.5 data-[state=checked]:translate-x-[22px]"/>
+                        </Switch.Root>
+                    </div>
+                    {plant.sick ?  
+                    <>
+                        <InfoPill text="Frecuencia de tratamiento:" value={plant.treatment.frequencyDays}/>
+                        <InfoPill text="Último tratamiento:" value={lastTreatment ? (lastTreatment === todayISO ? "Hoy" : `Hace ${lastTreatedInDays} días`) : "Sin tratamiento"}/>
+                        <p className="pb-[10px] bg-white p-3 rounded-xl flex justify-between font-normal text-detail">{plant.treatment.treatmentInfo}</p>
+                    </>
+                       : ""
+                }
+                    </div>
+            </section>
+
+            {/* COMENTARIOS */}
+            <section className="flex flex-col gap-[15px] p-[20px] m-3 bg-[#f2f4f2] rounded-4xl"> 
+                <h2 className="uppercase text-dark">Descripción e info</h2>
+                <p>
+                    {plant.notes}
+                </p>
+            </section>
+
+            {/* HISTORIAL */}
+            <section className="flex flex-col gap-[15px] p-[20px] m-3 bg-secondary border-1 border-dark rounded-4xl">
+                <h2 className="uppercase text-dark">Historial</h2>
+                {plant.comments?.slice(0, 3).map((comment) => {
+                        return(
+                            <article key={comment.id} className="m-[15px] pl-[7px] text-left flex flex-col gap-[7px] border-l border-dark">
+                                <span className="p-1 pr-[15px] pl-[15px] bg-primary rounded-lg w-fit">{comment.date}<button> -- Borrar</button></span>
+                                <p>{comment.text}</p>
+                            </article>
+                                        )
+                }
+                )}
+                {plant.comments.length > 3 ? 
+                  <button>Ver todos</button>
+                    : 
+                    ""
+                }
+            </section>
+
+            {/* ACCIONES */}
+            <ActionPanel plant={plant}/>
         </main>
     )
 }

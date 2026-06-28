@@ -3,6 +3,8 @@ import { NavLink } from 'react-router-dom'
 import {useState} from 'react'
 import {useChangeTitle} from '../hooks/setPageTitle.jsx'
 import { usePlantStore } from '../store/usePlantStore.js'
+import imgSick from '../assets/sick.svg'
+import imgDrop from '../assets/drop.svg'
 
 export default function HomePage() {
     const plants = usePlantStore((state) => state.plants)
@@ -22,6 +24,7 @@ export default function HomePage() {
     }
 
     const filteredPlants = plants.filter(p => (p.location === locationFilter || locationFilter === "0") && p.name.toLowerCase().includes(searchText.toLowerCase()))
+    const today = new Date()
 
     return(
        <>
@@ -42,12 +45,16 @@ export default function HomePage() {
         <div className=" grid grid-cols-3 gap-3">
             {/* HACER FILTRADO PREVIO */}
             {filteredPlants.map((plant) => {
+                const daysFromLastWater = Math.abs(today - new Date(plant.watering.waterRecord[plant.watering.waterRecord.length - 1])) /86400000
+                const needsToWater = daysFromLastWater > plant.watering.frequencyDays
                 return(
-                    <article key={plant.id}  >
+                    <article key={plant.id} className="relative">
                         <NavLink to={`/plantdetails/${plant.id}`}>
-                            <img className="aspect-square object-cover rounded-md" src={plant.imageUrl}/>
+                            <img className="aspect-square object-cover rounded-md" src={plant.imageUrls[0]} alt={plant.name}/>
                         </NavLink>
                         <h2>{plant.name}</h2>
+                        {plant.sick ? <img className="absolute bottom-[45px] right-[-7px]" src={imgSick} width="25" height="25"/>  : ""}
+                        {needsToWater ? <img className="absolute top-[-5px] right-[-7px]" src={imgDrop} width="25" height="25"/> : ""}
                     </article>
                 )
             })}

@@ -7,12 +7,18 @@ export const usePlantStore = create((set) => ({
 
     waterPlant: (plantId) => set((state) => ({
         plants: state.plants.map((plant) =>
-        plant.id === plantId ? {...plant, waterRecord: [...plant.waterRecord, new Date().toISOString().split('T')[0]]} : plant)
+        plant.id === plantId ? {...plant, watering: {...plant.watering, waterRecord: [...plant.watering.waterRecord, new Date().toISOString().split('T')[0]]}} : plant)
     })),
 
     fertilizePlant: (plantId) => set((state) => ({
         plants: state.plants.map((plant) =>
-        plant.id === plantId ? {...plant, fertilizerRecord: [...plant.fertilizerRecord, new Date().toISOString().split('T')[0]]} : plant)
+        plant.id === plantId ? {...plant, fertilization: {...plant.fertilization, fertilizerRecord: [...plant.fertilization.fertilizerRecord, new Date().toISOString().split('T')[0]]}} : plant)
+    })),
+
+    treatPlant: (plantId) => set((state) =>({
+        plants: state.plants.map((plant) => 
+        plant.id === plantId ? {...plant, treatment: {...plant.treatment, treatmentRecord: [...plant.treatment.treatmentRecord, new Date().toISOString().split('T')[0]]}} : plant
+        )
     })),
 
     updatePlant: (plantId, updatedPlant) => set((state) => ({

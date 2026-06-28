@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+@theme{
+  --color-primary: #aeedd5;
+  --color-dark: #316d5b;
+  --color-secondary: #e3efe6;
+  --color-detail: #1e0c06;
+}
+
 :root {
   --text: #6b6375;
   --text-h: #08060d;
@@ -54,6 +61,9 @@
 
 body {
   margin: 0;
+  background-color:#f8faf8;
+  font-family: Afacad, sans-serif;
+  font-size:18px;
 }
 
 #root {
@@ -70,9 +80,8 @@ body {
 
 h1,
 h2 {
-  font-family: var(--heading);
   font-weight: 500;
-  color: var(--text-h);
+  /* color: var(--text-h); */
 }
 
 h1 {
