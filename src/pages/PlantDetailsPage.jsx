@@ -7,14 +7,22 @@ import ActionPanel from '../Components/ActionPanel.jsx'
 import InfoPill from '../Components/InfoPill.jsx'
 import editImg from '../assets/edit.svg'
 import arrowImg from '../assets/arrowBack.svg'
+import trashImg from '../assets/trash.svg'
 import plusImg from '../assets/plus.svg'
+import {useState} from 'react'
 
 export default function PlantDetails(){
-    const{updatePlant} = usePlantStore()
+    const{updatePlant, deleteComment} = usePlantStore()
     const {id} = useParams()
     const plant = usePlantStore((state) => state.plants.find((p) => p.id === id))
     const today = new Date()
     const todayISO = today.toISOString().split('T')[0]
+    const[showAll, setShowAll] = useState(false)
+
+    const [newComment, setNewComment] = useState(false)
+    const [newCommentText, setNewCommentText] = useState("")
+    const commentsToShow = showAll ? plant.comments : plant.comments.slice(-3)
+
     useChangeTitle(`Detalles de ${plant.name}`)   
 
     if (!plant){
@@ -53,12 +61,41 @@ export default function PlantDetails(){
         updatePlant(plant.id, updatedPlant)
     }
 
+    const handleNewComment = (e, text) =>{
+        e.preventDefault();
+        const plantWithNewComment = {
+            ...plant,
+            comments: [
+                ...plant.comments,
+                {id: crypto.randomUUID(),
+                    date: new Date().toISOString().split('T')[0],
+                    text: text
+                }
+            ]
+        }
+
+        setNewCommentText("")
+        setNewComment(false)
+        updatePlant(plant.id, plantWithNewComment)
+    }
+
+    const handleSaveImg = (img) => {
+        const imgUrl = URL.createObjectURL(img)
+        const plantWithNewImg = {
+            ...plant,
+            imageUrls: [
+                ...plant.imageUrls,
+                imgUrl
+            ]
+        }
+
+        updatePlant(plant.id, plantWithNewImg)
+    }
+
     console.log("lastWater" + lastWater)
-    console.log(today)
-    console.log(todayISO)
+    console.log(plant.comments)
 
     //SIMULAR TIMEOUT COMO SI COGIERA DE API Y CARGANDO
-
     return(
         <main className="pb-[140px] pt-[70px]">
             {/* BARRA SUPERIOR ATRAS/NOMBRE/EDITAR */}
@@ -77,7 +114,10 @@ export default function PlantDetails(){
                 {plant.imageUrls.map((url, i) => (
                 <img key={i} className="aspect-square rounded-lg shadow shrink-0 w-[90%] snap-center" src={url} alt={`Foto ${i + 1} de ${plant.name}`}/>
                 ))}
-                <div className="aspect-square rounded-lg shrink-0 w-[90%] span-center justify-center align-center flex"><img src={plusImg} width="40px" height="40px"/></div>
+                <div className="relative">
+                    <div className="aspect-square rounded-lg shrink-0 w-[90%] span-center justify-center align-center flex"><img src={plusImg} width="40px" height="40px"/></div>
+                    <input className="absolute w-full h-full top-0 left-0 opacity-0" type="file" accept="image/*" onChange={(e) => handleSaveImg(e.target.files[0])}/>
+                </div>
             </div>
             
             {/* FICHA TECNICA */}
@@ -123,24 +163,40 @@ export default function PlantDetails(){
             </section>
 
             {/* HISTORIAL */}
-            <section className="flex flex-col gap-[15px] p-[20px] m-3 bg-secondary border-1 border-dark rounded-4xl">
-                <h2 className="uppercase text-dark">Historial</h2>
-                {plant.comments?.slice(0, 3).map((comment) => {
+            <section className="relative flex flex-col gap-[15px] p-[20px] m-3 bg-secondary border-1 border-dark rounded-4xl">
+                <h2 className="uppercase text-dark">Historial<button className="absolute rounded-full p-[10px] w-[45px] h-[45px] h-fit bg-primary top-[10px] right-[10px]" onClick={() => setNewComment(!newComment)}>+</button></h2>
+                 {
+                    newComment ?
+                <form className="p-4">
+                    <label className="flex flex-col justify-between gap-3">
+                        <span>Nuevo comentario</span>
+                        <textarea className="bg-white grow p-3 border-2 border-[#dbdbdb] rounded-[5px]" rows="6" onChange={(e) => setNewCommentText(e.target.value)} value={newCommentText}></textarea>
+                    </label>
+                    <button className="bg-primary p-3 rounded-full mt-[10px]" type="submit" onClick={(e) => handleNewComment(e, newCommentText)}>Guardar</button>
+                </form>
+                    :
+                <></>
+            }
+                {commentsToShow.length > 0 ? 
+                    commentsToShow.reverse().map((comment) => {
                         return(
                             <article key={comment.id} className="m-[15px] pl-[7px] text-left flex flex-col gap-[7px] border-l border-dark">
-                                <span className="p-1 pr-[15px] pl-[15px] bg-primary rounded-lg w-fit">{comment.date}<button> -- Borrar</button></span>
                                 <p>{comment.text}</p>
+                                
+                                <span className="flex justify-between w-full p-1 rounded-lg w-fit font-bold">{comment.date}<button onClick={() => deleteComment(plant.id, comment.id)}> <img width="40" height="40" className="rounded-full p-[9px] bg-primary" src={trashImg}/> </button></span>
                             </article>
-                                        )
+                            )
+                    })
+                    
+                    : <p>No hay comentarios</p>
                 }
-                )}
                 {plant.comments.length > 3 ? 
-                  <button>Ver todos</button>
+                  <button onClick={() => setShowAll(!showAll)}>Ver todos</button>
                     : 
                     ""
                 }
             </section>
-
+           
             {/* ACCIONES */}
             <ActionPanel plant={plant}/>
         </main>

@@ -25,5 +25,27 @@ export const usePlantStore = create((set) => ({
         plants: state.plants.map((plant) =>
             plant.id === plantId ? {...plant, ...updatedPlant} : plant
         )
+    })),
+
+    deleteComment: (plantId, commentId) => set((state) => ({
+        plants: state.plants.map((plant) => {
+            if (plant.id===plantId){
+                return {
+                    ...plant,
+                    comments: plant.comments.filter(c => c.id !== commentId)
+                }
+            }
+            return plant
+        }
+        )
     }))
+    // ,
+
+    // addComment:(plantId, commentText) => set((state) => ({
+    //     plants: state.plants.map((plant) => {
+    //         if(plant.id === plantId){
+    //             plant.comments.
+    //         }
+    //     })
+    // }))
 }))
