@@ -38,14 +38,12 @@ export const usePlantStore = create((set) => ({
             return plant
         }
         )
-    }))
-    // ,
+    })),
 
-    // addComment:(plantId, commentText) => set((state) => ({
-    //     plants: state.plants.map((plant) => {
-    //         if(plant.id === plantId){
-    //             plant.comments.
-    //         }
-    //     })
-    // }))
+    addPlant: (newPlant) => set((state) => ({
+        plants: [
+            ...state.plants,
+            newPlant
+        ]
+    }))
 }))

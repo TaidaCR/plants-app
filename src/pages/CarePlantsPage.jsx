@@ -23,9 +23,22 @@ export default function CarePlantsPage() {
         return differenceInDays
     }
 
-    const needsWater = plants.filter((p) => p.watering.frequencyDays < getDaysDifference(p.watering.waterRecord[p.watering.waterRecord.length - 1]))
-    const needsTreatment = plants.filter((p) => p.treatment.frequencyDays < getDaysDifference(p.treatment.treatmentRecord[p.treatment.treatmentRecord.length - 1]))
-    const needsFertilize = plants.filter((p) => p.fertilization.frequencyDays < getDaysDifference(p.fertilization.fertilizerRecord[p.fertilization.fertilizerRecord.length - 1]))
+    const plantCareNeeds = (freqDays, record) =>{
+            if(record.length > 0){
+                const daysFromLastCare = getDaysDifference(record[record.length - 1])
+                if(daysFromLastCare > freqDays){
+                    return true
+                }else{
+                    return false
+                }
+            } else{
+                return true
+            }
+    }
+                                                     
+    const needsWater = plants.filter((p) => plantCareNeeds(p.watering.frequencyDays, p.watering.waterRecord)  )
+    const needsTreatment = plants.filter((p) => p.sick && plantCareNeeds(p.treatment.frequencyDays, p.treatment.treatmentRecord))                                                                        
+    const needsFertilize = plants.filter((p) => plantCareNeeds(p.fertilization.frequencyDays, p.fertilization.fertilizerRecord))
     
     const plantsToCare = functionality === 'waterPlant' ? needsWater : (functionality === 'treatPlant' ? needsTreatment : needsFertilize)
     

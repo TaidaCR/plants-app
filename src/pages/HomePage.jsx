@@ -45,8 +45,9 @@ export default function HomePage() {
         <div className=" grid grid-cols-3 gap-3">
             {/* HACER FILTRADO PREVIO */}
             {filteredPlants.map((plant) => {
-                const daysFromLastWater = Math.abs(today - new Date(plant.watering.waterRecord[plant.watering.waterRecord.length - 1])) /86400000
-                const needsToWater = daysFromLastWater > plant.watering.frequencyDays
+                const daysFromLastWater = plant.watering.waterRecord.length > 0 ? (Math.abs(today - new Date(plant.watering.waterRecord[plant.watering.waterRecord.length - 1])) /86400000) : null
+                const needsToWater = daysFromLastWater != null ? daysFromLastWater > plant.watering.frequencyDays : true
+
                 return(
                     <article key={plant.id} className="relative">
                         <NavLink to={`/plantdetails/${plant.id}`}>

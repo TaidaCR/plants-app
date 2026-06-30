@@ -61,6 +61,19 @@ export default function PlantDetails(){
         updatePlant(plant.id, updatedPlant)
     }
 
+    const handleToggleMisting = (checked) => {
+
+        const updatedPlant = {
+            ...plant,
+            misting: {
+                ...plant.misting,
+                required: checked
+            }
+        }
+
+        updatePlant(plant.id, updatedPlant)
+    }
+
     const handleNewComment = (e, text) =>{
         e.preventDefault();
         const plantWithNewComment = {
@@ -152,6 +165,20 @@ export default function PlantDetails(){
                        : ""
                 }
                     </div>
+
+                <h2 className="uppercase text-dark">Pulverización</h2>
+                <div className="pb-[10px] bg-white rounded-xl flex flex-col justify-between font-normal text-detail">
+                    <div className="flex justify-between p-3">
+                        <p>¿Requiere pulverización?:</p>
+                        <Switch.Root checked={plant.misting.required} onCheckedChange={handleToggleMisting} className="w-11 h-6 bg-gray-300 data-[state=checked]:bg-green-500 rounded-full relative transition-colors duration-200 ease-in-out outline-none cursor-pointer">
+                            <Switch.Thumb className="block w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-200 ease-in-out translate-x-0.5 data-[state=checked]:translate-x-[22px]"/>
+                        </Switch.Root>
+                    </div>
+                    {plant.misting.required ?
+                        <InfoPill text="Frecuencia de pulverización:" value={plant.misting.frequencyDays}/>
+                    : ""
+                    }
+                </div>
             </section>
 
             {/* COMENTARIOS */}
