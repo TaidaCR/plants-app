@@ -3,6 +3,7 @@ import {useState} from 'react'
 import sprayImg from '../assets/spray.svg'
 import pillImg from '../assets/pill.svg'
 import dropImg from '../assets/drop.svg'
+import imgPlant from '../assets/plant.svg'
 
 export default function CarePlantsPage() {
     const plants = usePlantStore((state) => state.plants)
@@ -38,7 +39,7 @@ export default function CarePlantsPage() {
                                                      
     const needsWater = plants.filter((p) => plantCareNeeds(p.watering.frequencyDays, p.watering.waterRecord)  )
     const needsTreatment = plants.filter((p) => p.sick && plantCareNeeds(p.treatment.frequencyDays, p.treatment.treatmentRecord))                                                                        
-    const needsFertilize = plants.filter((p) => plantCareNeeds(p.fertilization.frequencyDays, p.fertilization.fertilizerRecord))
+    const needsFertilize = plants.filter((p) => p.fertilization.required && p.fertilization.required && plantCareNeeds(p.fertilization.frequencyDays, p.fertilization.fertilizerRecord))
     
     const plantsToCare = functionality === 'waterPlant' ? needsWater : (functionality === 'treatPlant' ? needsTreatment : needsFertilize)
     
@@ -47,10 +48,13 @@ export default function CarePlantsPage() {
         <section className="p-[20px]">
             <h1>Cuidados</h1>
             <div className="grid grid-cols-4 gap-3">
-                {plantsToCare.map((plant) => {
+                {plantsToCare.length === 0 ? 
+                    <p className="col-span-4">No hay plantas que {functionality === 'waterPlant' ? <span>regar</span> : functionality === 'treatPlant' ?  <span>tratar</span> : <span>fertilizar</span>}</p>
+                    :
+                plantsToCare.map((plant) => {
                             return(
                             <button onClick={functionality === 'waterPlant' ? () => waterPlant(plant.id) : (functionality === 'fertilizePlant' ? () => fertilizePlant(plant.id) : () => treatPlant(plant.id))}>
-                                <img className="aspect-square rounded-lg shadow shrink-0 w-[90%] snap-center" src={plant.imageUrls[0]}></img>
+                                <img className="aspect-square rounded-lg shadow shrink-0 w-[90%] snap-center" src={plant.imageUrls.length > 0 ? plant.imageUrls[0] : imgPlant}></img>
                                 <h2>{plant.name}</h2>
                             </button>
                             )

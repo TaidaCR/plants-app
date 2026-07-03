@@ -8,7 +8,6 @@ export default function Header(){
             <nav className="grow w-[100] content-center">
                 <ul className="flex  w-[100] gap-4 items-center justify-center">
                     <li><NavLink to="/" >Mis plantas</NavLink></li>
-                    <li><NavLink to="/newplant">Nueva planta</NavLink></li>
                     <li><NavLink to="/careplants">Cuidados</NavLink></li>
                 </ul>
             </nav>

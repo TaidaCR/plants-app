@@ -356,7 +356,7 @@
     },
     "lightInfo": "indirecta media",
     "fertilization": {
-      "required": true,
+      "required": false,
       "frequencyDays": 20,
       "fertilizationInfo": "Fertilizante líquido equilibrado para plantas de flor, rico en potasio para favorecer la floración. Aplicar cada 20 días durante primavera y verano.",
       "fertilizerRecord": [

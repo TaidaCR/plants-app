@@ -5,6 +5,8 @@
   --color-dark: #316d5b;
   --color-secondary: #e3efe6;
   --color-detail: #1e0c06;
+  --color-accent:#e9d6f9;
+  --color-accentStrong: #c183f0;
 }
 
 :root {
@@ -13,7 +15,6 @@
   --bg: #fff;
   --border: #e5e4e7;
   --code-bg: #f4f3ec;
-  --accent: #aa3bff;
   --accent-bg: rgba(170, 59, 255, 0.1);
   --accent-border: rgba(170, 59, 255, 0.5);
   --social-bg: rgba(244, 243, 236, 0.5);
@@ -127,4 +128,5 @@ input{
   background-color: #e3efe6;
   border-radius:50px;
   padding:5px 15px;
+  max-width:170px;
 }

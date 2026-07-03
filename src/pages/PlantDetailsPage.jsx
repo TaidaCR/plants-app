@@ -21,7 +21,7 @@ export default function PlantDetails(){
 
     const [newComment, setNewComment] = useState(false)
     const [newCommentText, setNewCommentText] = useState("")
-    const commentsToShow = showAll ? plant.comments : plant.comments.slice(-3)
+    const commentsToShow = showAll ? (plant.comments.length > 3 ? plant.comments : plant.comments.slice(-3)) : null
 
     useChangeTitle(`Detalles de ${plant.name}`)   
 
@@ -74,6 +74,19 @@ export default function PlantDetails(){
         updatePlant(plant.id, updatedPlant)
     }
 
+    const handleToggleFertilization = (checked) => {
+
+        const updatedPlant = {
+            ...plant,
+            fertilization: {
+                ...plant.fertilization,
+                required: checked
+            }
+        }
+
+        updatePlant(plant.id, updatedPlant)
+    }
+
     const handleNewComment = (e, text) =>{
         e.preventDefault();
         const plantWithNewComment = {
@@ -117,20 +130,21 @@ export default function PlantDetails(){
                     <img width="25px" height="25px" src={arrowImg} />
                 </NavLink>
                 <h1 className="flex"> {plant.name}</h1>
-                <NavLink to={`/editplant/${id}`} className="rounded-full p-[10px] h-fit bg-primary">
+                <NavLink to={`/editplant/${id}`} className="rounded-full p-[10px] h-fit bg-accentStrong">
                     <img width="25px" height="25px" src={editImg} />
                 </NavLink>
             </header>
 
             {/* IMÁGENES */}
-            <div className="flex gap-0 p-[20px] overflow-x-auto grid grid-cols-4 snap-x snap-mandatory">
-                {plant.imageUrls.map((url, i) => (
-                <img key={i} className="aspect-square rounded-lg shadow shrink-0 w-[90%] snap-center" src={url} alt={`Foto ${i + 1} de ${plant.name}`}/>
-                ))}
-                <div className="relative">
-                    <div className="aspect-square rounded-lg shrink-0 w-[90%] span-center justify-center align-center flex"><img src={plusImg} width="40px" height="40px"/></div>
+            <div className="flex gap-2 p-[20px] overflow-x-auto snap-x snap-mandatory">
+                <div className="aspect-square rounded-lg shrink-0 snap-center relative w-[30%]">
+                    <div className="aspect-square rounded-lg shrink-0 span-center justify-center align-center flex"><img src={plusImg} width="40px" height="40px"/></div>
                     <input className="absolute w-full h-full top-0 left-0 opacity-0" type="file" accept="image/*" onChange={(e) => handleSaveImg(e.target.files[0])}/>
                 </div>
+                {plant.imageUrls?.map((url, i) => (
+                <img key={i} className="aspect-square rounded-lg shadow shrink-0 snap-center w-[30%]" src={url} alt={`Foto ${i + 1} de ${plant.name}`}/>
+                ))}
+                
             </div>
             
             {/* FICHA TECNICA */}
@@ -143,16 +157,29 @@ export default function PlantDetails(){
                 <InfoPill text="Último riego:" value={lastWater ? (lastWater === todayISO ? "Hoy" : `Hace ${lastWateredInDays} días`) : "Sin riegos"}/>
 
                 <h2 className="uppercase text-dark">Fertilización</h2>
-                <InfoPill text="Frecuencia de fertilización:" value={plant.fertilization.frequencyDays}/>
-                <InfoPill text="Última fertilización:" value={lastFertilizer ? (lastFertilizer === todayISO ? "Hoy" : `Hace ${lastFertilizedInDays} días`) : "Sin fertilizar"}/>
-                <p className="pb-[10px] bg-white p-3 rounded-xl flex justify-between font-normal text-detail">{plant.fertilization.fertilizationInfo}</p>
+                <div className="pb-[10px] bg-white rounded-xl flex flex-col justify-between font-normal text-detail">
+                    <div className="flex justify-between p-3">
+                        <p>¿Requiere fertilización?:</p>
+                        <Switch.Root checked={plant.fertilization.required} onCheckedChange={handleToggleFertilization} className="w-11 h-6 bg-gray-300 data-[state=checked]:bg-accentStrong rounded-full relative transition-colors duration-200 ease-in-out outline-none cursor-pointer">
+                            <Switch.Thumb className="block w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-200 ease-in-out translate-x-0.5 data-[state=checked]:translate-x-[22px]"/>
+                        </Switch.Root>
+                    </div>
+                    {plant.fertilization.required ?
+                    <>
+                        <InfoPill text="Frecuencia de fertilización:" value={plant.fertilization.frequencyDays}/>
+                        <InfoPill text="Última fertilización:" value={lastFertilizer ? (lastFertilizer === todayISO ? "Hoy" : `Hace ${lastFertilizedInDays} días`) : "Sin fertilizar"}/>
+                        <p className="pb-[10px] bg-white p-3 rounded-xl flex justify-between font-normal text-detail">{plant.fertilization.fertilizationInfo}</p>
+                    </>
+                    : ""
+                    }
+                </div>
 
                 
                 <h2 className="uppercase text-dark">Tratamientos</h2>
                 <div className="pb-[10px] bg-white rounded-xl flex flex-col justify-between font-normal text-detail">
                     <div className="flex justify-between p-3">
                         <p>Enferma:</p>
-                        <Switch.Root checked={plant.sick} onCheckedChange={handleToggleSick} className="w-11 h-6 bg-gray-300 data-[state=checked]:bg-green-500 rounded-full relative transition-colors duration-200 ease-in-out outline-none cursor-pointer">
+                        <Switch.Root checked={plant.sick} onCheckedChange={handleToggleSick} className="w-11 h-6 bg-gray-300 data-[state=checked]:bg-accentStrong rounded-full relative transition-colors duration-200 ease-in-out outline-none cursor-pointer">
                             <Switch.Thumb className="block w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-200 ease-in-out translate-x-0.5 data-[state=checked]:translate-x-[22px]"/>
                         </Switch.Root>
                     </div>
@@ -170,7 +197,7 @@ export default function PlantDetails(){
                 <div className="pb-[10px] bg-white rounded-xl flex flex-col justify-between font-normal text-detail">
                     <div className="flex justify-between p-3">
                         <p>¿Requiere pulverización?:</p>
-                        <Switch.Root checked={plant.misting.required} onCheckedChange={handleToggleMisting} className="w-11 h-6 bg-gray-300 data-[state=checked]:bg-green-500 rounded-full relative transition-colors duration-200 ease-in-out outline-none cursor-pointer">
+                        <Switch.Root checked={plant.misting.required} onCheckedChange={handleToggleMisting} className="w-11 h-6 bg-gray-300 data-[state=checked]:bg-accentStrong rounded-full relative transition-colors duration-200 ease-in-out outline-none cursor-pointer">
                             <Switch.Thumb className="block w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-200 ease-in-out translate-x-0.5 data-[state=checked]:translate-x-[22px]"/>
                         </Switch.Root>
                     </div>
@@ -191,7 +218,7 @@ export default function PlantDetails(){
 
             {/* HISTORIAL */}
             <section className="relative flex flex-col gap-[15px] p-[20px] m-3 bg-secondary border-1 border-dark rounded-4xl">
-                <h2 className="uppercase text-dark">Historial<button className="absolute rounded-full p-[10px] w-[45px] h-[45px] h-fit bg-primary top-[10px] right-[10px]" onClick={() => setNewComment(!newComment)}>+</button></h2>
+                <h2 className="uppercase text-dark">Historial<button className="absolute rounded-full p-[10px] w-[45px] h-[45px] h-fit bg-accentStrong top-[10px] right-[10px]" onClick={() => setNewComment(!newComment)}><img src={plusImg} alt=""/></button></h2>
                  {
                     newComment ?
                 <form className="p-4">
@@ -204,7 +231,7 @@ export default function PlantDetails(){
                     :
                 <></>
             }
-                {commentsToShow.length > 0 ? 
+                {commentsToShow?.length > 0 ? 
                     commentsToShow.reverse().map((comment) => {
                         return(
                             <article key={comment.id} className="m-[15px] pl-[7px] text-left flex flex-col gap-[7px] border-l border-dark">
@@ -217,7 +244,7 @@ export default function PlantDetails(){
                     
                     : <p>No hay comentarios</p>
                 }
-                {plant.comments.length > 3 ? 
+                {plant.comments?.length > 3 ? 
                   <button onClick={() => setShowAll(!showAll)}>Ver todos</button>
                     : 
                     ""

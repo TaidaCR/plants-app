@@ -16,6 +16,7 @@ export default function NewPlant(){
     const [imageUrl, setImageUrl] = useState(null)
     const [sick, setSick] = useState(false)
     const [mistingRequired, setMistingRequired] = useState(false)
+    const [fertilizationRequired, setFertilizationRequired] = useState(false)
     const navigate = useNavigate()
 
     const handleSubmit = (e) => {
@@ -45,8 +46,9 @@ export default function NewPlant(){
                 waterRecord: []
             },
             fertilization:{
-                frequencyDays: Number(newPlantData.fertilizationFrequencyDays) || 0,
-                fertilizationInfo: newPlantData.fertilizationInfo || "",
+                required: fertilizationRequired,
+                frequencyDays: fertilizationRequired ? Number(newPlantData.fertilizationFrequencyDays) || 0 : 0,
+                fertilizationInfo: fertilizationRequired ? newPlantData.fertilizationInfo || "" : "",
                 fertilizerRecord: []
             },
             misting: {
@@ -73,12 +75,23 @@ export default function NewPlant(){
             
             <CustomTextArea name="lightInfo" text="Info de iluminación"/>
             
+            <div className="flex justify-between">
+                <p>¿Requiere fertilización?:</p>
+                <Switch.Root name="fertilizationRequired" checked={fertilizationRequired} onCheckedChange={(checked) => setFertilizationRequired(checked)} className="w-11 h-6 bg-gray-300 data-[state=checked]:bg-accentStrong rounded-full relative transition-colors duration-200 ease-in-out outline-none cursor-pointer">
+                    <Switch.Thumb className="block w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-200 ease-in-out translate-x-0.5 data-[state=checked]:translate-x-[22px]"/>
+                </Switch.Root>
+            </div>
+            {fertilizationRequired ?
+            <>
             <CustomTextArea name="fertilizationInfo" text="Info de fertilización"/>
             <CustomInput name="fertilizationFrequencyDays" type="number" text="Frecuencia de fertilización"/>
+            </>
+            : <></>
+            }
 
             <div className="flex justify-between">
                 <p>Enferma:</p>
-                <Switch.Root name="sick" checked={sick} onCheckedChange={(checked) => setSick(checked)} className="w-11 h-6 bg-gray-300 data-[state=checked]:bg-green-500 rounded-full relative transition-colors duration-200 ease-in-out outline-none cursor-pointer">
+                <Switch.Root name="sick" checked={sick} onCheckedChange={(checked) => setSick(checked)} className="w-11 h-6 bg-gray-300 data-[state=checked]:bg-accentStrong rounded-full relative transition-colors duration-200 ease-in-out outline-none cursor-pointer">
                     <Switch.Thumb className="block w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-200 ease-in-out translate-x-0.5 data-[state=checked]:translate-x-[22px]"/>
                 </Switch.Root>
             </div>
@@ -93,7 +106,7 @@ export default function NewPlant(){
             }
             <div className="flex justify-between">
                 <p>¿Requiere pulverización?:</p>
-                <Switch.Root name="mistingRequired" checked={mistingRequired} onCheckedChange={(checked) => setMistingRequired(checked)} className="w-11 h-6 bg-gray-300 data-[state=checked]:bg-green-500 rounded-full relative transition-colors duration-200 ease-in-out outline-none cursor-pointer">
+                <Switch.Root name="mistingRequired" checked={mistingRequired} onCheckedChange={(checked) => setMistingRequired(checked)} className="w-11 h-6 bg-gray-300 data-[state=checked]:bg-accentStrong rounded-full relative transition-colors duration-200 ease-in-out outline-none cursor-pointer">
                     <Switch.Thumb className="block w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-200 ease-in-out translate-x-0.5 data-[state=checked]:translate-x-[22px]"/>
                 </Switch.Root>
             </div>
@@ -103,7 +116,7 @@ export default function NewPlant(){
             }
             <CustomTextArea text="Notas" name="notes"/>
 
-            <button type="submit">AÑADIR</button>
+            <button className="bg-accent w-[170px] shadow p-2 rounded-full font-medium self-center" type="submit">AÑADIR</button>
         </form>
     )
 }
