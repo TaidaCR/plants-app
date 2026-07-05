@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom'
 import { useChangeTitle } from '../hooks/setPageTitle'
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import { usePlantStore } from '../store/usePlantStore'
 import {useNavigate} from 'react-router-dom'
 import { NavLink } from 'react-router-dom';
@@ -10,48 +10,63 @@ import CustomTextArea from '../Components/CustomTextArea';
 import CustomDatePicker from '../Components/CustomDatePicker'
 import * as Switch from '@radix-ui/react-switch'
 
+//Misión: Conseguir los datos y asegurarse de que plant existe. Asi al recargar la página funcionaría
 export default function EditPlantPage() {
+    const { plants, fetchPlants } = usePlantStore()
+    const { id } = useParams()
 
+    useEffect(() => {
+        fetchPlants()
+    }, [])
+
+    const plant = plants.find(p => p.id === id)
+
+    if (!plant) {
+        return <div className="pt-24 text-center">Cargando datos de la planta...</div>
+    }
+
+    // Si la planta existe, renderizamos el formulario de abajo pasándole la prop
+    return <PlantForm plant={plant} />
+}
+
+function PlantForm({plant}) {
     const{updatePlant} = usePlantStore()
-    const {id} = useParams()
-    const plant = usePlantStore((state) => state.plants.find((p) => p.id === id))
-
     const navigate = useNavigate()
-
-    useChangeTitle(`Editar ${plant.name}`)  
+    useChangeTitle(`Editar ${plant.name}`)
 
     // GENERAL
-    const [name, setName] = useState(plant?.name || "")
-    const [acquisition, setAcquisition] = useState(plant?.acquisition ? new Date(plant.acquisition) : null)
-    const [notes, setNotes] = useState(plant?.notes || "")
-    const [location, setLocation] = useState(plant?.location || "")
+    const [name, setName] = useState(plant.name || "")
+    const [acquisition, setAcquisition] = useState(plant.acquisition ? new Date(plant.acquisition) : null)
+    const [notes, setNotes] = useState(plant.notes || "")
+    const [location, setLocation] = useState(plant.location || "")
 
     //RIEGO
-    const [wateringFrequencyDays, setWateringFrequencyDays] = useState(plant?.watering?.frequencyDays || 0)
-    const [waterInfo, setWaterInfo] = useState(plant?.watering?.wateringInfo || "")
-    const [lastWatering, setLastWatering] = useState(plant?.watering?.waterRecord.length === 0 ? null : new Date(plant.watering.waterRecord[plant.watering.waterRecord.length - 1]))
+    const [wateringFrequencyDays, setWateringFrequencyDays] = useState(plant.watering?.frequencyDays || 0)
+    const [waterInfo, setWaterInfo] = useState(plant.watering?.wateringInfo || "")
+    const [lastWatering, setLastWatering] = useState(plant.watering?.waterRecord?.length === 0 ? null : new Date(plant.watering?.waterRecord[plant?.watering?.waterRecord?.length - 1]))
 
     //TRATAMIENTO
-    const [treatmentFrequencyDays, setTreatmentFrequencyDays] = useState(plant?.treatment?.frequencyDays || 0)
-    const [treatmentInfo, setTreatmentInfo] = useState(plant?.treatment?.treatmentInfo || "")
-    const [lastTreatment, setLastTreatment] = useState(plant?.treatment?.treatmentRecord.length === 0 ? null : new Date(plant.treatment.treatmentRecord[plant.treatment.treatmentRecord.length - 1]))
-
-    console.log("lastTreatment" + lastTreatment)
+    const [treatmentFrequencyDays, setTreatmentFrequencyDays] = useState(plant.treatment?.frequencyDays || 0)
+    const [treatmentInfo, setTreatmentInfo] = useState(plant.treatment?.treatmentInfo || "")
+    const [lastTreatment, setLastTreatment] = useState(plant.treatment?.treatmentRecord?.length === 0 ? null : new Date(plant.treatment?.treatmentRecord[plant?.treatment?.treatmentRecord?.length - 1]))
+console.log("¿Qué tipo de dato es?", typeof plant.treatment?.lastTreatment, plant.treatment?.lastTreatment);
+    // console.log("lastTreatment" + lastTreatment)
     // FERTILIZACIÓN
-    const [fertilizationRequired, setFertilizationRequired] = useState(plant?.fertilization?.required)
-    const [fertilizationFrequencyDays, setFertilizationFrequencyDays] = useState(plant?.fertilization?.frequencyDays || 0)
-    const [fertilizationInfo, setFertilizationInfo] = useState(plant?.fertilization?.fertilizationInfo || "")
-    const [lastFertilizer, setLastFertilizer] = useState(plant?.fertilization?.fertilizerRecord.length === 0 ? null : new Date(plant.fertilization.fertilizerRecord[plant.fertilization.fertilizerRecord.length - 1]))
+    const [fertilizationRequired, setFertilizationRequired] = useState(plant.fertilization?.required)
+    const [fertilizationFrequencyDays, setFertilizationFrequencyDays] = useState(plant.fertilization?.frequencyDays || 0)
+    const [fertilizationInfo, setFertilizationInfo] = useState(plant.fertilization?.fertilizationInfo || "")
+    const [lastFertilizer, setLastFertilizer] = useState(plant.fertilization?.fertilizerRecord?.length === 0 ? null : new Date(plant.fertilization?.fertilizerRecord[plant?.fertilization?.fertilizerRecord?.length - 1]))
 
     //PULVERIZACIÓN
-    const [mistingRequired, setMistingRequired] = useState(plant?.misting?.required)
-    const [mistingFrequencyDays, setMistingFrequencyDays] = useState(plant?.misting?.frequencyDays || 0)
+    const [mistingRequired, setMistingRequired] = useState(plant.misting?.required)
+    const [mistingFrequencyDays, setMistingFrequencyDays] = useState(plant.misting?.frequencyDays || 0)
 
     //ENFERMA
-    const [sick, setSick] = useState(plant?.sick || false)
+    const [sick, setSick] = useState(plant.sick || false)
 
     //ILUMINACIÓN
-    const [lightInfo, setLightInfo] = useState(plant?.lightInfo || "")
+    const [lightInfo, setLightInfo] = useState(plant.lightInfo || "")
+
 
     const handleSubmit = (e) =>  {
         e.preventDefault();
@@ -89,12 +104,14 @@ export default function EditPlantPage() {
             }
         }
 
-        updatePlant(plant.id, updatedPlant)
+        updatePlant(updatedPlant)
         console.log(plant.watering.waterRecord)
 
         navigate(`/plantdetails/${plant.id}`)
     }
-
+    if (!plant) {
+        return <div>La planta no existe</div>
+    }
     return (
         <>
         {/* BARRA SUPERIOR ATRAS/NOMBRE/EDITAR */}
@@ -119,11 +136,11 @@ export default function EditPlantPage() {
             </section>
             <section className="p-[20px] bg-[#f2f4f2] rounded-4xl text-left gap-[10px] flex flex-col">
                 <h2 className="uppercase text-dark">INFO RIEGO</h2>
-                        <CustomInput type="number" text="Frecuencia de riego:" placeholder={plant.watering.frequencyDays} value={wateringFrequencyDays} handleOnChange={(e) => setWateringFrequencyDays(e.target.value)}/>
+                        <CustomInput type="number" text="Frecuencia de riego:" placeholder={plant.watering?.frequencyDays} value={wateringFrequencyDays} handleOnChange={(e) => setWateringFrequencyDays(e.target.value)}/>
                         <CustomDatePicker text="Último riego" name="lastWatering" placeholderText="Selecciona una fecha" selected={lastWatering} handleOnChange={(date) => setLastWatering(date)}/>
                         <CustomTextArea text="Info del riego:" value={waterInfo} handleOnChange={(e) => setWaterInfo(e.target.value)}/>
             </section>
-            <section className="p-[20px] bg-[#f2f4f2] rounded-4xl text-left gap-[10px] flex flex-col"> 
+            <section className="p-[20px] bg-[#f2f4f2] rounded-4xl text-left gap-[10px] flex flex-col">
                 <h2 className="uppercase text-dark">INFO TRATAMIENTO</h2>
             <div className="flex justify-between">
                 <p>Enferma:</p>
@@ -133,14 +150,14 @@ export default function EditPlantPage() {
             </div>
             {sick ?
             <>
-            <CustomInput type="number" text="Frecuencia tratamiento:" placeholder={plant.treatment.frequencyDays} value={treatmentFrequencyDays} handleOnChange={(e) => setTreatmentFrequencyDays(e.target.value)}/>
+            <CustomInput type="number" text="Frecuencia tratamiento:" placeholder={plant.treatment?.frequencyDays} value={treatmentFrequencyDays} handleOnChange={(e) => setTreatmentFrequencyDays(e.target.value)}/>
             <CustomDatePicker text="Último tratamiento" name="lastTreatment" placeholderText="Selecciona una fecha" selected={lastTreatment} handleOnChange={(date) => setLastTreatment(date)}/>
             <CustomTextArea text="Info del tratamiento:" value={treatmentInfo} handleOnChange={(e) => setTreatmentInfo(e.target.value)}/>
             </>
             : <></>
             }</section>
-           
-      <section className="p-[20px] bg-[#f2f4f2] rounded-4xl text-left gap-[10px] flex flex-col">      
+
+      <section className="p-[20px] bg-[#f2f4f2] rounded-4xl text-left gap-[10px] flex flex-col">
            <h2 className="uppercase text-dark">INFO FERTILIZACIÓN</h2>
             <div className="flex justify-between">
                 <p>¿Requiere fertilización?:</p>
@@ -150,14 +167,14 @@ export default function EditPlantPage() {
             </div>
             {fertilizationRequired ?
             <>
-            <CustomInput type="number" text="Frecuencia fertilización:" placeholder={plant.fertilization.frequencyDays} value={fertilizationFrequencyDays} handleOnChange={(e) => setFertilizationFrequencyDays(e.target.value)}/>
+            <CustomInput type="number" text="Frecuencia fertilización:" placeholder={plant.fertilization?.frequencyDays} value={fertilizationFrequencyDays} handleOnChange={(e) => setFertilizationFrequencyDays(e.target.value)}/>
             <CustomDatePicker text="Última fertilización" name="lastFertilizer" placeholderText="Selecciona una fecha" selected={lastFertilizer} handleOnChange={(date) => setLastFertilizer(date)}/>
             <CustomTextArea text="Info de fertilización:" value={fertilizationInfo} handleOnChange={(e) => setFertilizationInfo(e.target.value)}/>
             </>
             : <></>
             }
             </section>
-            <section className="p-[20px] bg-[#f2f4f2] rounded-4xl text-left gap-[10px] flex flex-col">   
+            <section className="p-[20px] bg-[#f2f4f2] rounded-4xl text-left gap-[10px] flex flex-col">
            <h2 className="uppercase text-dark">PULVERIZACIÓN</h2>
             <div className="flex justify-between">
                 <p>¿Requiere pulverización?:</p>
@@ -166,7 +183,7 @@ export default function EditPlantPage() {
                 </Switch.Root>
             </div>
             {mistingRequired ?
-            <CustomInput type="number" text="Frecuencia de pulverización:" placeholder={plant.misting.frequencyDays} value={mistingFrequencyDays} handleOnChange={(e) => setMistingFrequencyDays(e.target.value)}/>
+            <CustomInput type="number" text="Frecuencia de pulverización:" placeholder={plant.misting?.frequencyDays} value={mistingFrequencyDays} handleOnChange={(e) => setMistingFrequencyDays(e.target.value)}/>
             : <></>
             }
             </section>

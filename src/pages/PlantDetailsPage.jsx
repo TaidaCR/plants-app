@@ -9,21 +9,30 @@ import editImg from '../assets/edit.svg'
 import arrowImg from '../assets/arrowBack.svg'
 import trashImg from '../assets/trash.svg'
 import plusImg from '../assets/plus.svg'
-import {useState} from 'react'
+import Button from '../Components/Button.jsx'
+import { useNavigate } from 'react-router-dom'
+import {useState, useEffect} from 'react'
 
 export default function PlantDetails(){
-    const{updatePlant, deleteComment} = usePlantStore()
+    const{updatePlant, deleteComment, deletePlant, fetchPlants, plants} = usePlantStore()
+    const navigate = useNavigate()
     const {id} = useParams()
-    const plant = usePlantStore((state) => state.plants.find((p) => p.id === id))
+    const plant = plants.find(plant => plant.id === id)
+    
+    useEffect(() =>{
+        fetchPlants()
+    }, [])
+
     const today = new Date()
     const todayISO = today.toISOString().split('T')[0]
     const[showAll, setShowAll] = useState(false)
 
     const [newComment, setNewComment] = useState(false)
     const [newCommentText, setNewCommentText] = useState("")
-    const commentsToShow = showAll ? (plant.comments.length > 3 ? plant.comments : plant.comments.slice(-3)) : null
-
-    useChangeTitle(`Detalles de ${plant.name}`)   
+    const commentsToShow = ((plant?.comments?.length > 3 && showAll) || plant?.comments?.lenght < 3) ?  plant?.comments : plant?.comments?.slice(-3)
+    
+    console.log("commentsToshow" +commentsToShow)
+    useChangeTitle(`Detalles de ${plant?.name}`)   
 
     if (!plant){
         return <div>La planta no existe</div>
@@ -57,8 +66,8 @@ export default function PlantDetails(){
             ...plant,
             sick: checked
         }
-
-        updatePlant(plant.id, updatedPlant)
+        console.log("updatedPlant: " + updatedPlant)
+        updatePlant(updatedPlant)
     }
 
     const handleToggleMisting = (checked) => {
@@ -71,7 +80,7 @@ export default function PlantDetails(){
             }
         }
 
-        updatePlant(plant.id, updatedPlant)
+        updatePlant(updatedPlant)
     }
 
     const handleToggleFertilization = (checked) => {
@@ -84,7 +93,7 @@ export default function PlantDetails(){
             }
         }
 
-        updatePlant(plant.id, updatedPlant)
+        updatePlant(updatedPlant)
     }
 
     const handleNewComment = (e, text) =>{
@@ -116,6 +125,12 @@ export default function PlantDetails(){
         }
 
         updatePlant(plant.id, plantWithNewImg)
+    }
+
+    const handleDeletePlant = (plant) => {
+        deletePlant(plant, plant.id)
+        console.log("Planta eliminada")
+        navigate("/")
     }
 
     console.log("lastWater" + lastWater)
@@ -179,15 +194,15 @@ export default function PlantDetails(){
                 <div className="pb-[10px] bg-white rounded-xl flex flex-col justify-between font-normal text-detail">
                     <div className="flex justify-between p-3">
                         <p>Enferma:</p>
-                        <Switch.Root checked={plant.sick} onCheckedChange={handleToggleSick} className="w-11 h-6 bg-gray-300 data-[state=checked]:bg-accentStrong rounded-full relative transition-colors duration-200 ease-in-out outline-none cursor-pointer">
+                        <Switch.Root checked={plant?.sick ?? false} onCheckedChange={(checked) => handleToggleSick(checked)} className="w-11 h-6 bg-gray-300 data-[state=checked]:bg-accentStrong rounded-full relative transition-colors duration-200 ease-in-out outline-none cursor-pointer">
                             <Switch.Thumb className="block w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-200 ease-in-out translate-x-0.5 data-[state=checked]:translate-x-[22px]"/>
                         </Switch.Root>
                     </div>
-                    {plant.sick ?  
+                    {plant?.sick ?  
                     <>
-                        <InfoPill text="Frecuencia de tratamiento:" value={plant.treatment.frequencyDays}/>
+                        <InfoPill text="Frecuencia de tratamiento:" value={plant?.treatment?.frequencyDays}/>
                         <InfoPill text="Último tratamiento:" value={lastTreatment ? (lastTreatment === todayISO ? "Hoy" : `Hace ${lastTreatedInDays} días`) : "Sin tratamiento"}/>
-                        <p className="pb-[10px] bg-white p-3 rounded-xl flex justify-between font-normal text-detail">{plant.treatment.treatmentInfo}</p>
+                        <p className="pb-[10px] bg-white p-3 rounded-xl flex justify-between font-normal text-detail">{plant?.treatment?.treatmentInfo}</p>
                     </>
                        : ""
                 }
@@ -217,7 +232,7 @@ export default function PlantDetails(){
             </section>
 
             {/* HISTORIAL */}
-            <section className="relative flex flex-col gap-[15px] p-[20px] m-3 bg-secondary border-1 border-dark rounded-4xl">
+            <section className="relative flex flex-col gap-[15px] p-[20px] m-3 bg-secondary border-1 border-dark rounded-4xl items-center">
                 <h2 className="uppercase text-dark">Historial<button className="absolute rounded-full p-[10px] w-[45px] h-[45px] h-fit bg-accentStrong top-[10px] right-[10px]" onClick={() => setNewComment(!newComment)}><img src={plusImg} alt=""/></button></h2>
                  {
                     newComment ?
@@ -245,14 +260,17 @@ export default function PlantDetails(){
                     : <p>No hay comentarios</p>
                 }
                 {plant.comments?.length > 3 ? 
-                  <button onClick={() => setShowAll(!showAll)}>Ver todos</button>
+                  <button className="shadow bg-accentStrong text-black p-3 w-[200px] rounded-xl" onClick={() => setShowAll(!showAll)}>{showAll ? "Ver menos" : "Ver todos"}</button>
                     : 
                     ""
                 }
             </section>
-           
             {/* ACCIONES */}
+            <section className="justify-center flex">
+            <Button handleClick={() => handleDeletePlant(plant)} imgClass="bg-red-500" imgUrl={trashImg} addedClass="bg-red-500 p-0 text-white bottom-[65px] left-[20px]"/>
             <ActionPanel plant={plant}/>
+            </section>
+            
         </main>
     )
 }

@@ -1,14 +1,18 @@
 import { usePlantStore } from "../store/usePlantStore"
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import sprayImg from '../assets/spray.svg'
 import pillImg from '../assets/pill.svg'
 import dropImg from '../assets/drop.svg'
 import imgPlant from '../assets/plant.svg'
 
 export default function CarePlantsPage() {
-    const plants = usePlantStore((state) => state.plants)
+    const {plants, fetchPlants} = usePlantStore()
     const {waterPlant, fertilizePlant, treatPlant} = usePlantStore()
     const [functionality, setFunctionality] = useState('waterPlant')
+    
+    useEffect(() =>{
+        fetchPlants()
+    }, [])
 
     const getDaysDifference = (lastDayValue) =>{
 

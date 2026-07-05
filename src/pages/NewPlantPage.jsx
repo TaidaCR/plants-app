@@ -63,7 +63,7 @@ export default function NewPlant(){
     }
 
     return(
-        <form className="p-5 flex flex-col gap-[10px] pb-[70px]" onSubmit={(e) => handleSubmit(e)}>
+        <form className="p-5 flex flex-col gap-[10px] pb-[70px]" onSubmit={(e) => handleSubmit(e)} autocomplete="off">
             <h1>Nueva planta</h1>
             <CustomInput text="Nombre" type="text" placeholder="Introduce el nombre" name="name"/>
             <CustomDatePicker name="acquisition" placeholderText="Fecha adquisición" text="Fecha adquisición" selected={acqDate} handleOnChange={(date) => setAcqDate(date)}/>

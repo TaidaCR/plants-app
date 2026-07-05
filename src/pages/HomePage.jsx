@@ -34,7 +34,7 @@ export default function HomePage() {
     }
     if (loading) return <p>Cargando plantas...</p>
 
-    const filteredPlants = plants.filter(p => (p.location === locationFilter || locationFilter === "0") && p.name.toLowerCase().includes(searchText.toLowerCase()) && (showSick ? p.sick : true))
+    const filteredPlants = plants.filter(p => (p.location === locationFilter || locationFilter === "0") && p.name?.toLowerCase().includes(searchText.toLowerCase()) && (showSick ? p.sick : true))
     console.log(filteredPlants)
     const today = new Date()
 

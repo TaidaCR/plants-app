@@ -35,11 +35,29 @@ export const usePlantStore = create((set) => ({
         )
     })),
 
-    updatePlant: (plantId, updatedPlant) => set((state) => ({
-        plants: state.plants.map((plant) =>
-            plant.id === plantId ? {...plant, ...updatedPlant} : plant
-        )
-    })),
+    updatePlant: async (updatedPlant) => {
+        set({loading: true, error: null})
+        try{
+            const res = await fetch(`http://localhost:3000/plants/${updatedPlant.id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedPlant)
+            })
+            
+        if(!res.ok) throw new Error('Error en la petición')
+                
+        const result = await res.json()
+
+        set((state) => ({
+            plants: state.plants.map(p => p.id === result.id ? result : p),
+            loading:false
+    }))
+        }catch(error){
+            set({error: error.message, loading: false})
+        }
+    },
 
     deleteComment: (plantId, commentId) => set((state) => ({
         plants: state.plants.map((plant) => {
@@ -54,25 +72,45 @@ export const usePlantStore = create((set) => ({
         )
     })),
 
-    addPlant: async (newPlant) => {
-    set({loading: true, error: null})
-    try{
-        const res = await fetch('http://localhost:3000/plants', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json' },
-            body: JSON.stringify(newPlant)
-        })
-        if(!res.ok) throw new Error('Error en la petición')
-        
-        const result = await res.json()
-        set((state) => ({
-            plants: [...state.plants, result],
-            loading: false
-        }))
+    deletePlant: async (plant) =>{
+        set({error: null, loading: true})
+        try{
+            const res = await fetch(`http://localhost:3000/plants/${plant.id}`, {
+            method: 'DELETE'
+            })
 
-    }catch(error){
-        set({error: error.message, loading: false})
-    }
+            if(!res.ok) throw new Error('Error en la petición')
+            
+            set((state) => ({
+                plants: state.plants.filter(p => p.id !== plant.id),
+                loading: false
+            }))
+            
+        }catch(error){
+            set({error:error.message, loading: false})
+        }
+    },
+
+    addPlant: async (newPlant) => {
+        set({loading: true, error: null})
+        try{
+            const res = await fetch('http://localhost:3000/plants', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json' },
+                body: JSON.stringify(newPlant)
+            })
+
+            if(!res.ok) throw new Error('Error en la petición')
+            
+            const result = await res.json()
+            set((state) => ({
+                plants: [...state.plants, result],
+                loading: false
+            }))
+
+        }catch(error){
+            set({error: error.message, loading: false})
+        }
     }
 }))
