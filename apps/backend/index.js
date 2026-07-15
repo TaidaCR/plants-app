@@ -4,7 +4,7 @@ import { plantRouter } from './routes/plant.js';
 
 const app = express()
 const port = 3000;
-const acceptedOrigins = ['http://localhost:5173']
+const acceptedOrigins = ['http://localhost:5175, http://localhost:5175, http://localhost:5175']
 
 app.use(cors({
     origin: (origin, callback) => {
