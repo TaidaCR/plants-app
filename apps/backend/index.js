@@ -1,10 +1,12 @@
 import express from 'express'
 import cors from 'cors'
 import { plantRouter } from './routes/plant.js';
+import { connectDB } from './config/db.js';
+import 'dotenv/config'
 
 const app = express()
-const port = 3000;
-const acceptedOrigins = ['http://localhost:5175, http://localhost:5175, http://localhost:5175']
+const port = process.env.PORT || 3000;
+const acceptedOrigins = process.env.ACCEPTED_ORIGINS ? process.env.ACCEPTED_ORIGINS.split(",") : []
 
 app.use(cors({
     origin: (origin, callback) => {
@@ -17,6 +19,8 @@ app.use(cors({
 
 //Middleware global
 app.use(express.json())
+
+connectDB()
 
 app.use('/plants', plantRouter)
 
