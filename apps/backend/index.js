@@ -10,20 +10,22 @@ const acceptedOrigins = process.env.ACCEPTED_ORIGINS ? process.env.ACCEPTED_ORIG
 
 app.use(cors({
     origin: (origin, callback) => {
-        if(!origin || acceptedOrigins.includes(origin)){
+        if (!origin || acceptedOrigins.includes(origin)) {
             callback(null, true)
-        }else{
+        } else {
             callback(new Error('Not allowed by CORS'))
-        }}
+        }
+    }
 }))
 
 //Middleware global
 app.use(express.json())
 
-connectDB()
-
 app.use('/plants', plantRouter)
 
+connectDB()
+
+
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+    console.log(`Example app listening on port ${port}`)
 })
