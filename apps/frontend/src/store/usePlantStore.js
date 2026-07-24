@@ -38,7 +38,7 @@ export const usePlantStore = create((set) => ({
     updatePlant: async (updatedPlant) => {
         set({ loading: true, error: null })
         try {
-            const res = await fetch(`http://localhost:3000/plants/${updatedPlant.id}`, {
+            const res = await fetch(`https://plants-app-backend.onrender.com/plants/${updatedPlant.id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
@@ -75,7 +75,7 @@ export const usePlantStore = create((set) => ({
     deletePlant: async (plant) => {
         set({ error: null, loading: true })
         try {
-            const res = await fetch(`http://localhost:3000/plants/${plant.id}`, {
+            const res = await fetch(`https://plants-app-backend.onrender.com/plants/${plant.id}`, {
                 method: 'DELETE'
             })
 
@@ -94,7 +94,7 @@ export const usePlantStore = create((set) => ({
     addPlant: async (newPlant) => {
         set({ loading: true, error: null })
         try {
-            const res = await fetch('http://localhost:3000/plants', {
+            const res = await fetch('https://plants-app-backend.onrender.com/plants', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
