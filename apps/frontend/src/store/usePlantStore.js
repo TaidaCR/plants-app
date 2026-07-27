@@ -19,21 +19,68 @@ export const usePlantStore = create((set) => ({
         }
     },
 
-    waterPlant: (plantId) => set((state) => ({
-        plants: state.plants.map((plant) =>
-            plant.id === plantId ? { ...plant, watering: { ...plant.watering, waterRecord: [...plant.watering.waterRecord, new Date().toISOString().split('T')[0]] } } : plant)
-    })),
+    waterPlant: async (plantId) => {
+        const { plants, updatePlant } = usePlantStore.getState();
+        const targetPlant = plants.find(p => (p.id || p._id) === plantId)
 
-    fertilizePlant: (plantId) => set((state) => ({
-        plants: state.plants.map((plant) =>
-            plant.id === plantId ? { ...plant, fertilization: { ...plant.fertilization, fertilizerRecord: [...plant.fertilization.fertilizerRecord, new Date().toISOString().split('T')[0]] } } : plant)
-    })),
+        if (!targetPlant) return
 
-    treatPlant: (plantId) => set((state) => ({
-        plants: state.plants.map((plant) =>
-            plant.id === plantId ? { ...plant, treatment: { ...plant.treatment, treatmentRecord: [...plant.treatment.treatmentRecord, new Date().toISOString().split('T')[0]] } } : plant
-        )
-    })),
+        const today = new Date().toISOString().split('T')[0]
+        const currentWaterRecord = targetPlant.watering?.waterRecord | []
+
+        const updatedPlant = {
+            ...targetPlant,
+            id: plantId,
+            watering: {
+                ...targetPlant.watering,
+                waterRecord: [currentWaterRecord, today]
+            }
+        }
+
+        await updatePlant(updatedPlant)
+    },
+
+    fertilizePlant: async (plantId) => {
+        const { plants, updatePlant } = usePlantStore.getState();
+        const targetPlant = plants.find(p => (p.id || p._id) === plantId)
+
+        if (!targetPlant) return
+
+        const today = new Date().toISOString().split('T')[0]
+        const currentFertilizerRecord = targetPlant.fertilization?.fertilizerRecord | []
+
+        const updatedPlant = {
+            ...targetPlant,
+            id: plantId,
+            fertilization: {
+                ...targetPlant.fertilization,
+                fertilizerRecord: [currentFertilizerRecord, today]
+            }
+        }
+
+        await updatePlant(updatedPlant)
+    },
+
+    treatPlant: async (plantId) => {
+        const { plants, updatePlant } = usePlantStore.getState();
+        const targetPlant = plants.find(p => (p.id || p._id) === plantId)
+
+        if (!targetPlant) return
+
+        const today = new Date().toISOString().split('T')[0]
+        const currentTreatmentRecord = targetPlant.treatment?.treatmentRecord | []
+
+        const updatedPlant = {
+            ...targetPlant,
+            id: plantId,
+            treatment: {
+                ...targetPlant.treatment,
+                treatmentRecord: [currentTreatmentRecord, today]
+            }
+        }
+
+        await updatePlant(updatedPlant)
+    },
 
     updatePlant: async (updatedPlant) => {
         set({ loading: true, error: null })

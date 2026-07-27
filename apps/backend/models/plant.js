@@ -2,7 +2,6 @@ import { Plant } from './PlantSchema.js'
 
 export class PlantModel {
     static async getAll() {
-
         return await Plant.find()
     }
 
