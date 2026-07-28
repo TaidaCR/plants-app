@@ -26,14 +26,14 @@ export const usePlantStore = create((set) => ({
         if (!targetPlant) return
 
         const today = new Date().toISOString().split('T')[0]
-        const currentWaterRecord = targetPlant.watering?.waterRecord | []
+        const currentWaterRecord = targetPlant.watering?.waterRecord || []
 
         const updatedPlant = {
             ...targetPlant,
             id: plantId,
             watering: {
                 ...targetPlant.watering,
-                waterRecord: [currentWaterRecord, today]
+                waterRecord: [...currentWaterRecord, today]
             }
         }
 
@@ -47,14 +47,14 @@ export const usePlantStore = create((set) => ({
         if (!targetPlant) return
 
         const today = new Date().toISOString().split('T')[0]
-        const currentFertilizerRecord = targetPlant.fertilization?.fertilizerRecord | []
+        const currentFertilizerRecord = targetPlant.fertilization?.fertilizerRecord || []
 
         const updatedPlant = {
             ...targetPlant,
             id: plantId,
             fertilization: {
                 ...targetPlant.fertilization,
-                fertilizerRecord: [currentFertilizerRecord, today]
+                fertilizerRecord: [...currentFertilizerRecord, today]
             }
         }
 
@@ -68,14 +68,14 @@ export const usePlantStore = create((set) => ({
         if (!targetPlant) return
 
         const today = new Date().toISOString().split('T')[0]
-        const currentTreatmentRecord = targetPlant.treatment?.treatmentRecord | []
+        const currentTreatmentRecord = targetPlant.treatment?.treatmentRecord || []
 
         const updatedPlant = {
             ...targetPlant,
             id: plantId,
             treatment: {
                 ...targetPlant.treatment,
-                treatmentRecord: [currentTreatmentRecord, today]
+                treatmentRecord: [...currentTreatmentRecord, today]
             }
         }
 
@@ -96,7 +96,6 @@ export const usePlantStore = create((set) => ({
             if (!res.ok) throw new Error('Error en la petición')
 
             const result = await res.json()
-
             set((state) => ({
                 plants: state.plants.map(p => p.id === result.id ? result : p),
                 loading: false

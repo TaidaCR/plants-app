@@ -14,21 +14,40 @@ export default function NewPlant() {
     const { addPlant } = usePlantStore()
     const plantas = usePlantStore(state => state.plants)
     const [acqDate, setAcqDate] = useState(null)
-    const [imageUrl, setImageUrl] = useState(null)
+    const [imageUrls, setImageUrls] = useState([])
     const [uploading, setUploading] = useState(false)
     const [sick, setSick] = useState(false)
     const [mistingRequired, setMistingRequired] = useState(false)
     const [fertilizationRequired, setFertilizationRequired] = useState(false)
     const navigate = useNavigate()
 
+    const handleSaveImgs = async (selectedImgs) => {
+        const filesArray = Array.from(selectedImgs)
+        var uploadedCloudinaryUrls = null;
+
+        if (filesArray.length > 0) {
+            // Mapeamos cada archivo a una promesa de subida
+            const uploadPromises = filesArray.map(file => upLoadImageToCloudinary(file));
+
+            // Esperamos a que TODAS las promesas se resuelvan
+            uploadedCloudinaryUrls = await Promise.all(uploadPromises);
+
+            // uploadedCloudinaryUrls contendrá un array con todas las URLs devueltas [url1, url2, ...]
+        }
+
+        if (!uploadedCloudinaryUrls) {
+            return
+        }
+
+        setImageUrls((prevUrls) =>
+            [...prevUrls,
+            ...uploadedCloudinaryUrls])
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setUploading(true)
 
-        let uploadedCloudinaryUrl = null;
-        if (imageUrl) {
-            uploadedCloudinaryUrl = await upLoadImageToCloudinary(imageUrl);
-        }
 
         const data = new FormData(e.target)
         const newPlantData = Object.fromEntries(data.entries())
@@ -37,7 +56,7 @@ export default function NewPlant() {
             id: crypto.randomUUID(),
             name: newPlantData.name,
             location: newPlantData.location,
-            imageUrls: uploadedCloudinaryUrl ? [uploadedCloudinaryUrl] : [],
+            imageUrls: imageUrls,
             lightInfo: newPlantData.lightInfo,
             acquisition: acqDate ? acqDate.toISOString().split('T')[0] : null,
             sick: sick,
@@ -77,7 +96,16 @@ export default function NewPlant() {
             <CustomInput text="Nombre" type="text" placeholder="Introduce el nombre" name="name" />
             <CustomDatePicker name="acquisition" placeholderText="Fecha adquisición" text="Fecha adquisición" selected={acqDate} handleOnChange={(date) => setAcqDate(date)} />
             <CustomInput text="Localización" type="text" placeholder="Introduce ubicación" name="location" />
-            <input type="file" accept="image/*" onChange={(e) => setImageUrl(e.target.files[0] || null)} />
+            <label className="pb-[10px] bg-white p-3 rounded-xl flex justify-between font-normal text-detail ">
+                <span class="flex">Imágenes</span>
+                <input multiple type="file" accept="image/*" onChange={(e) => handleSaveImgs(e.target.files)} />
+            </label>
+            <div className="flex gap-2 p-[20px] overflow-x-auto snap-x snap-mandatory">
+                {imageUrls?.map((url, i) => (
+                    <img key={i} className="aspect-square rounded-lg shadow shrink-0 snap-center w-[30%] object-cover" src={url} alt={`Foto ${i + 1} de ${name}`} />
+                ))}
+            </div>
+
 
             <CustomTextArea name="wateringInfo" text="Info de riego" />
             <CustomInput name="wateringFrequencyDays" type="number" text="Frecuencia de riego" />
