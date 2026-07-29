@@ -9,6 +9,7 @@ import editImg from '../assets/edit.svg'
 import arrowImg from '../assets/arrowBack.svg'
 import trashImg from '../assets/trash.svg'
 import plusImg from '../assets/plus.svg'
+import loadingImg from '../assets/loading.svg'
 import Button from '../Components/Button.jsx'
 import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
@@ -19,6 +20,7 @@ export default function PlantDetails() {
     const navigate = useNavigate()
     const { id } = useParams()
     const plant = plants.find(plant => plant.id === id)
+    const [uploadingImg, setUploadingImg] = useState(false)
 
     useEffect(() => {
         fetchPlants()
@@ -117,6 +119,7 @@ export default function PlantDetails() {
     }
 
     const handleSaveImg = async (img) => {
+        setUploadingImg(true)
         let uploadedCloudinaryUrl = null;
         if (img) {
             uploadedCloudinaryUrl = await upLoadImageToCloudinary(img);
@@ -129,6 +132,7 @@ export default function PlantDetails() {
         }
 
         updatePlant(plantWithNewImg)
+        setUploadingImg(false)
         console.log("imagen subida")
     }
 
@@ -158,7 +162,14 @@ export default function PlantDetails() {
             {/* IMÁGENES */}
             <div className="flex gap-2 p-[20px] overflow-x-auto snap-x snap-mandatory">
                 <div className="aspect-square rounded-lg shrink-0 snap-center relative w-[30%]">
-                    <div className="aspect-square rounded-lg shrink-0 span-center justify-center align-center flex"><img src={plusImg} width="40px" height="40px" /></div>
+                    <div className="aspect-square rounded-lg shrink-0 span-center justify-center align-center flex">
+                        {
+                        uploadingImg ? 
+                        <img src={loadingImg} className="animate-spin loading-img" width="40px" height="40px"/>
+                        :
+                        <img src={plusImg} width="40px" height="40px"/>
+                        }
+                    </div>
                     <input className="absolute w-full h-full top-0 left-0 opacity-0" type="file" accept="image/*" onChange={(e) => handleSaveImg(e.target.files[0])} />
                 </div>
                 {plant.imageUrls?.map((url, i) => (

@@ -12,16 +12,17 @@ export default function NewPlant() {
     useChangeTitle("Nueva Planta")
 
     const { addPlant } = usePlantStore()
-    const plantas = usePlantStore(state => state.plants)
     const [acqDate, setAcqDate] = useState(null)
     const [imageUrls, setImageUrls] = useState([])
-    const [uploading, setUploading] = useState(false)
+    const [uploadingImg, setUploadingImg] = useState(false)
     const [sick, setSick] = useState(false)
     const [mistingRequired, setMistingRequired] = useState(false)
     const [fertilizationRequired, setFertilizationRequired] = useState(false)
     const navigate = useNavigate()
+    const [status, setStatus] = useState('idle')
 
     const handleSaveImgs = async (selectedImgs) => {
+        setUploadingImg(true)
         const filesArray = Array.from(selectedImgs)
         var uploadedCloudinaryUrls = null;
 
@@ -42,12 +43,13 @@ export default function NewPlant() {
         setImageUrls((prevUrls) =>
             [...prevUrls,
             ...uploadedCloudinaryUrls])
+        setUploadingImg(false)
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setUploading(true)
-
+        setStatus('saving')
+        // setUploading(true)
 
         const data = new FormData(e.target)
         const newPlantData = Object.fromEntries(data.entries())
@@ -68,7 +70,7 @@ export default function NewPlant() {
             notes: newPlantData.notes,
             comments: [],
             watering: {
-                frequencyDays: Number(newPlantData.waterFrequencyDays) || 0,
+                frequencyDays: Number(newPlantData.wateringFrequencyDays) || 0,
                 wateringInfo: newPlantData.wateringInfo || "",
                 waterRecord: []
             },
@@ -84,20 +86,22 @@ export default function NewPlant() {
             }
         }
 
-        await addPlant(newPlant)
-        setUploading(true)
-        console.log(plantas)
-        navigate("/")
+        try {
+            await addPlant(newPlant)
+            navigate("/")
+        } catch {
+            setStatus('error')
+        }
     }
 
     return (
-        <form className="p-5 flex flex-col gap-[10px] pb-[70px]" onSubmit={(e) => handleSubmit(e)} autocomplete="off">
+        <form className="p-5 flex flex-col gap-[10px] pb-[70px]" onSubmit={(e) => handleSubmit(e)} autoComplete="off">
             <h1>Nueva planta</h1>
             <CustomInput text="Nombre" type="text" placeholder="Introduce el nombre" name="name" />
             <CustomDatePicker name="acquisition" placeholderText="Fecha adquisición" text="Fecha adquisición" selected={acqDate} handleOnChange={(date) => setAcqDate(date)} />
             <CustomInput text="Localización" type="text" placeholder="Introduce ubicación" name="location" />
             <label className="pb-[10px] bg-white p-3 rounded-xl flex justify-between font-normal text-detail ">
-                <span class="flex">Imágenes</span>
+                <span className="flex">Imágenes</span>
                 <input multiple type="file" accept="image/*" onChange={(e) => handleSaveImgs(e.target.files)} />
             </label>
             <div className="flex gap-2 p-[20px] overflow-x-auto snap-x snap-mandatory">
@@ -137,7 +141,6 @@ export default function NewPlant() {
                     <CustomInput text="Frecuencia tratamiento" type="number" placeholder="Introduce frecuencia tratamiento" name="treatmentFrequencyDays" />
                     <CustomTextArea text="Info del tratamiento" name="treatmentInfo" />
                 </>
-
                 :
                 <></>
             }
@@ -153,9 +156,18 @@ export default function NewPlant() {
             }
             <CustomTextArea text="Notas" name="notes" />
 
-            <button disabled={uploading} className="bg-accent w-[170px] shadow p-2 rounded-full font-medium self-center" type="submit">
-                {uploading ? 'Subiendo imagen...' : 'Guardar planta'}
-            </button>
+            <button disabled={(status === 'saving') || uploadingImg} className="bg-accentStrong w-[170px] shadow p-2 rounded-full font-medium self-center disabled:opacity-50 text-black" type="submit">
+                {uploadingImg
+                    ? 'Cargando imagen...'
+                    : status === 'saving'
+                        ? 'Guardando...'
+                        : status === 'error'
+                            ? 'Error, inténtalo de nuevo'
+                            : 'Guardar planta'
+                }            </button>
+            {status === 'error' && (
+                <p className="text-red-500 text-center">Error al guardar. Comprueba tu conexión y vuelve a intentarlo.</p>
+            )}
         </form>
     )
 }

@@ -1,6 +1,19 @@
 import { create } from 'zustand'
 // import initialPlants from '../data/plants.json'
 
+//Añadimos helper timeout para el fetch
+const fetchWithTimeout = async (url, options = {}, timeoutMs = 30000) => {
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), timeoutMs)
+    try {
+        const res = await fetch(url, { ...options, signal: controller.signal })
+        return res
+    } finally {
+        clearTimeout(timeout)
+    }
+}
+
+
 //Hook personalizado
 export const usePlantStore = create((set) => ({
     plants: [],
@@ -140,13 +153,12 @@ export const usePlantStore = create((set) => ({
     addPlant: async (newPlant) => {
         set({ loading: true, error: null })
         try {
-            const res = await fetch('https://plants-app-backend.onrender.com/plants', {
+            const res = await fetchWithTimeout('https://plants-app-backend.onrender.com/plants', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newPlant)
             })
+
 
             if (!res.ok) throw new Error('Error en la petición')
 
@@ -158,6 +170,7 @@ export const usePlantStore = create((set) => ({
 
         } catch (error) {
             set({ error: error.message, loading: false })
+            throw error
         }
     }
 }))
