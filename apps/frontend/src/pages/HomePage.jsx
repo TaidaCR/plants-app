@@ -42,7 +42,7 @@ export default function HomePage() {
         <>
             <section className="p-[20px] flex flex-col gap-[15px] pb-[90px]">
                 <h1>Mis plantas</h1>
-                <input onChange={handleInputChange} placeholder="Buscar..." className="bg-red-100 rounded-sm p-[5px]" type="search"></input>
+                <input onChange={handleInputChange} placeholder="Buscar..." className="!rounded-[5px] bg-red-100 p-[5px] h-[40px] !max-w-none w-full" type="search"></input>
                 <div className="bg-secondary rounded-md">
                     <h2>Filtros</h2>
                     <select onChange={handleLocationFilter} value={locationFilter}>
@@ -80,7 +80,7 @@ export default function HomePage() {
                                             <img src={imgPlant} alt={plant.name} className="aspect-square object-cover rounded-md" />
                                         </NavLink>}
                                     <h2>{plant.name}</h2>
-                                    {plant.sick ? <img className="absolute bottom-[45px] right-[-7px]" src={imgSick} width="25" height="25" /> : ""}
+                                    {plant.sick ? <img className="absolute  top-[95px] right-[-7px]" src={imgSick} width="25" height="25" /> : ""}
                                     {needsToWater ? <img className="absolute top-[-5px] right-[-7px]" src={imgDrop} width="25" height="25" /> : ""}
                                 </article>
                             )

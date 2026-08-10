@@ -1,14 +1,12 @@
-import { useParams } from 'react-router-dom'
-import { useChangeTitle } from '../hooks/setPageTitle'
+import * as Switch from '@radix-ui/react-switch'
 import { useState, useEffect } from 'react'
+import { useNavigate, NavLink, useParams } from 'react-router-dom'
+import { useChangeTitle } from '../hooks/setPageTitle'
 import { usePlantStore } from '../store/usePlantStore'
-import { useNavigate } from 'react-router-dom'
-import { NavLink } from 'react-router-dom';
 import arrowImg from '../assets/arrowBack.svg'
 import CustomInput from '../Components/CustomInput';
 import CustomTextArea from '../Components/CustomTextArea';
 import CustomDatePicker from '../Components/CustomDatePicker'
-import * as Switch from '@radix-ui/react-switch'
 
 //Misión: Conseguir los datos y asegurarse de que plant existe. Asi al recargar la página funcionaría
 export default function EditPlantPage() {
@@ -79,20 +77,20 @@ function PlantForm({ plant }) {
             sick: sick,
             watering: {
                 ...plant.watering,
-                waterRecord: lastWatering ? [...(plant.watering.waterRecord || []).slice(0, -1), lastWatering.toISOString().split('T')[0]] : plant.watering.waterRecord || [],
+                waterRecord: lastWatering ? [...(plant.watering.waterRecord || []).slice(0, -1), lastWatering.toISOString()] : plant.watering.waterRecord || [],
                 frequencyDays: wateringFrequencyDays,
                 wateringInfo: waterInfo
             },
             treatment: {
                 ...plant.treatment,
-                treatmentRecord: lastTreatment ? [...(plant.treatment.treatmentRecord || []).slice(0, -1), lastTreatment.toISOString().split('T')[0]] : plant.treatment.treatmentRecord || [],
+                treatmentRecord: lastTreatment ? [...(plant.treatment.treatmentRecord || []).slice(0, -1), lastTreatment.toISOString()] : plant.treatment.treatmentRecord || [],
                 frequencyDays: treatmentFrequencyDays,
                 treatmentInfo: treatmentInfo
             },
             fertilization: {
                 ...plant.fertilization,
                 required: fertilizationRequired,
-                fertilizerRecord: fertilizationRequired && lastFertilizer ? [...(plant.fertilization.fertilizerRecord || []).slice(0, -1), lastFertilizer.toISOString().split('T')[0]] : [],
+                fertilizerRecord: fertilizationRequired && lastFertilizer ? [...(plant.fertilization.fertilizerRecord || []).slice(0, -1), lastFertilizer.toISOString()] : [],
                 frequencyDays: fertilizationRequired ? fertilizationFrequencyDays : 0,
                 fertilizationInfo: fertilizationRequired ? fertilizationInfo : ""
             },
@@ -125,7 +123,7 @@ function PlantForm({ plant }) {
                 <section className="p-[20px] bg-[#f2f4f2] rounded-4xl text-left gap-[10px] flex flex-col">
                     <h2 className="uppercase text-dark">Info general</h2>
                     <CustomInput type="text" text="Nombre:" placeholder={plant.name} value={name} handleOnChange={(e) => setName(e.target.value)} />
-                    <CustomDatePicker text="Fecha adquisición:" name="acquisition" selected={acquisition} handleOnChange={(date) => setAcquisition(date)} />
+                    <CustomDatePicker text="Fecha adquisición:" name="acquisition" selected={acquisition} required="true" handleOnChange={(date) => setAcquisition(date)} />
                     <CustomInput type="text" text="Localización:" placeholder={location} value={location} handleOnChange={(e) => setLocation(e.target.value)} />
                     <CustomTextArea text="Notas:" value={notes} handleOnChange={(e) => setNotes(e.target.value)} />
 

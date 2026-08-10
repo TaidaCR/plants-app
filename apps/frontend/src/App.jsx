@@ -1,7 +1,7 @@
 import Header from './Components/Header'
-// import Footer from './Components/Footer'
 import { Routes, Route } from 'react-router-dom'
-import { lazy, Suspense} from 'react'
+import { lazy, Suspense } from 'react'
+import ScrollToTop from './Components/ScrollToTop.jsx'
 
 const HomePage = lazy(() => import("./pages/HomePage.jsx"))
 const PlantDetailsPage = lazy(() => import("./pages/PlantDetailsPage.jsx"))
@@ -12,17 +12,18 @@ const CarePlantsPage = lazy(() => import("./pages/CarePlantsPage.jsx"))
 function App() {
   return (
     <>
-      <Header/>
+      <Header />
       <Suspense fallback={<p>Cargando...</p>}>
-      <Routes>
-        <Route path="/" element={<HomePage/>}/>
-        <Route path="/plantdetails/:id" element={<PlantDetailsPage/>}/>
-        <Route path="/newplant" element={<NewPlantPage/>}/>
-        <Route path="/editplant/:id" element={<EditPlantPage/>}/>
-        <Route path="/careplants" element={<CarePlantsPage/>}></Route>
-      </Routes>
+        <ScrollToTop />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/plantdetails/:id" element={<PlantDetailsPage />} />
+          <Route path="/newplant" element={<NewPlantPage />} />
+          <Route path="/editplant/:id" element={<EditPlantPage />} />
+          <Route path="/careplants" element={<CarePlantsPage />}></Route>
+        </Routes>
       </Suspense>
-     
+
       {/* <Footer/> */}
     </>
   )

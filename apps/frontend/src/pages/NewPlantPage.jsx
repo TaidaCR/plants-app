@@ -3,23 +3,25 @@ import CustomDatePicker from "../Components/CustomDatePicker"
 import CustomInput from "../Components/CustomInput"
 import CustomTextArea from "../Components/CustomTextArea"
 import { usePlantStore } from "../store/usePlantStore"
+import imgUploadImg from "../assets/uploadImage.svg"
 import { useState } from "react"
 import * as Switch from '@radix-ui/react-switch'
 import { useNavigate } from "react-router-dom"
 import { upLoadImageToCloudinary } from "../utils/uploadImage.js"
 
 export default function NewPlant() {
-    useChangeTitle("Nueva Planta")
-
     const { addPlant } = usePlantStore()
+    const navigate = useNavigate()
+
     const [acqDate, setAcqDate] = useState(null)
     const [imageUrls, setImageUrls] = useState([])
     const [uploadingImg, setUploadingImg] = useState(false)
     const [sick, setSick] = useState(false)
     const [mistingRequired, setMistingRequired] = useState(false)
     const [fertilizationRequired, setFertilizationRequired] = useState(false)
-    const navigate = useNavigate()
     const [status, setStatus] = useState('idle')
+
+    useChangeTitle("Nueva Planta")
 
     const handleSaveImgs = async (selectedImgs) => {
         setUploadingImg(true)
@@ -98,11 +100,12 @@ export default function NewPlant() {
         <form className="p-5 flex flex-col gap-[10px] pb-[70px]" onSubmit={(e) => handleSubmit(e)} autoComplete="off">
             <h1>Nueva planta</h1>
             <CustomInput text="Nombre" type="text" placeholder="Introduce el nombre" name="name" />
-            <CustomDatePicker name="acquisition" placeholderText="Fecha adquisición" text="Fecha adquisición" selected={acqDate} handleOnChange={(date) => setAcqDate(date)} />
+            <CustomDatePicker name="acquisition" placeholderText="Fecha adquisición" required="true" text="Fecha adquisición" selected={acqDate} handleOnChange={(date) => setAcqDate(date)} />
             <CustomInput text="Localización" type="text" placeholder="Introduce ubicación" name="location" />
-            <label className="pb-[10px] bg-white p-3 rounded-xl flex justify-between font-normal text-detail ">
-                <span className="flex">Imágenes</span>
-                <input multiple type="file" accept="image/*" onChange={(e) => handleSaveImgs(e.target.files)} />
+            <label className="pb-[10px] bg-white p-3 rounded-xl flex justify-between font-normal text-detail relative">
+                <span className="flex">Cargar imágenes</span>
+                <input multiple type="file" className="invisible !max-w-[40px] mr-[20px]" accept="image/*" onChange={(e) => handleSaveImgs(e.target.files)} />
+                <div className="w-[40px] h-[40px] bg-accentStrong rounded-full content-center justify-items-center absolute right-[20px]"> <img src={imgUploadImg} /></div>
             </label>
             <div className="flex gap-2 p-[20px] overflow-x-auto snap-x snap-mandatory">
                 {imageUrls?.map((url, i) => (

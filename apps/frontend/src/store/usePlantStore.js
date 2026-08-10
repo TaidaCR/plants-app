@@ -38,7 +38,7 @@ export const usePlantStore = create((set) => ({
 
         if (!targetPlant) return
 
-        const today = new Date().toISOString().split('T')[0]
+        const today = new Date().toISOString()
         const currentWaterRecord = targetPlant.watering?.waterRecord || []
 
         const updatedPlant = {
@@ -59,7 +59,7 @@ export const usePlantStore = create((set) => ({
 
         if (!targetPlant) return
 
-        const today = new Date().toISOString().split('T')[0]
+        const today = new Date().toISOString()
         const currentFertilizerRecord = targetPlant.fertilization?.fertilizerRecord || []
 
         const updatedPlant = {
@@ -80,7 +80,7 @@ export const usePlantStore = create((set) => ({
 
         if (!targetPlant) return
 
-        const today = new Date().toISOString().split('T')[0]
+        const today = new Date().toISOString()
         const currentTreatmentRecord = targetPlant.treatment?.treatmentRecord || []
 
         const updatedPlant = {

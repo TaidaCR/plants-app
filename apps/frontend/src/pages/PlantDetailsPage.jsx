@@ -1,80 +1,69 @@
-import { useParams } from 'react-router-dom'
-import { NavLink } from 'react-router-dom'
+import { useParams, NavLink, useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import * as Switch from '@radix-ui/react-switch'
 import { useChangeTitle } from '../hooks/setPageTitle.jsx'
 import { usePlantStore } from '../store/usePlantStore.js'
 import ActionPanel from '../Components/ActionPanel.jsx'
+import Button from '../Components/Button.jsx'
 import InfoPill from '../Components/InfoPill.jsx'
 import editImg from '../assets/edit.svg'
 import arrowImg from '../assets/arrowBack.svg'
 import trashImg from '../assets/trash.svg'
 import plusImg from '../assets/plus.svg'
 import loadingImg from '../assets/loading.svg'
-import Button from '../Components/Button.jsx'
-import { useNavigate } from 'react-router-dom'
-import { useState, useEffect } from 'react'
 import { upLoadImageToCloudinary } from "../utils/uploadImage.js"
+import {getDaysDifference} from '../utils/calculationTools.js'
 
 export default function PlantDetails() {
+    //ORDEN 1: Hooks y estados
     const { updatePlant, deleteComment, deletePlant, fetchPlants, plants } = usePlantStore()
     const navigate = useNavigate()
     const { id } = useParams()
-    const plant = plants.find(plant => plant.id === id)
+
     const [uploadingImg, setUploadingImg] = useState(false)
-
-    useEffect(() => {
-        fetchPlants()
-    }, [])
-
-    const today = new Date()
-    const todayISO = today.toISOString().split('T')[0]
+    const [imgState, setImgState] = useState('close')
     const [showAll, setShowAll] = useState(false)
-
     const [newComment, setNewComment] = useState(false)
     const [newCommentText, setNewCommentText] = useState("")
-    const commentsToShow = ((plant?.comments?.length > 3 && showAll) || plant?.comments?.lenght < 3) ? plant?.comments : plant?.comments?.slice(-3)
 
-    console.log("commentsToshow" + commentsToShow)
+    //ORDEN 2: Effects
+    useEffect(() => {
+            fetchPlants()
+    }, [])
+
+    useEffect(() => {
+        imgState === 'open' ? document.body.style.overflow = 'hidden' : document.body.style.overflow = 'unset'
+        return () => {
+            document.body.style.overflow = 'unset'
+        }
+    }, [imgState])
+
+    const plant = plants.find(plant => plant.id === id)
     useChangeTitle(`Detalles de ${plant?.name}`)
+    if (!plant) return <div>La planta no existe</div>
 
-    if (!plant) {
-        return <div>La planta no existe</div>
-    }
-
+    //ORDEN 3: Derivados
+    const today = new Date()
+    const todayISO = today.toISOString().split('T')[0]
+    const commentsToShow = ((plant.comments?.length > 3 && showAll) || plant.comments?.lenght < 3) ? plant.comments : plant.comments?.slice(-3)
     const plantAcq = new Date(plant.acquisition).toLocaleDateString('es-ES')
-    const lastWater = plant.watering.waterRecord?.length > 0 ? plant.watering.waterRecord[plant.watering.waterRecord.length - 1] : null
-    const lastFertilizer = plant.fertilization.fertilizerRecord?.length > 0 ? plant.fertilization.fertilizerRecord[plant.fertilization.fertilizerRecord.length - 1] : null
-    const lastTreatment = plant.treatment.treatmentRecord?.length > 0 ? plant.treatment.treatmentRecord[plant.treatment.treatmentRecord.length - 1] : null
+    const lastWater = plant.watering.waterRecord?.length > 0 ? plant.watering.waterRecord[plant.watering.waterRecord.length - 1].split('T')[0] : null
+    const lastFertilizer = plant.fertilization.fertilizerRecord?.length > 0 ? plant.fertilization.fertilizerRecord[plant.fertilization.fertilizerRecord.length - 1].split('T')[0] : null
+    const lastTreatment = plant.treatment.treatmentRecord?.length > 0 ? plant.treatment.treatmentRecord[plant.treatment.treatmentRecord.length - 1].split('T')[0] : null
+    const lastWateredInDays = lastWater ? Math.floor(getDaysDifference(lastWater)) : null
+    const lastFertilizedInDays = lastFertilizer ? Math.floor(getDaysDifference(lastFertilizer)) : null
+    const lastTreatedInDays = lastTreatment ? Math.floor(getDaysDifference(lastTreatment)) : null
 
-    const getDaysDifference = (lastDayValue) => {
-
-        const lastDay = new Date(lastDayValue)
-
-        today.setHours(0, 0, 0, 0)
-        lastDay.setHours(0, 0, 0, 0)
-
-        const difference = today.getTime() - lastDay.getTime()
-        const differenceInDays = Math.floor(difference / (1000 * 60 * 60 * 24))
-
-        return differenceInDays
-    }
-
-    const lastWateredInDays = lastWater ? getDaysDifference(lastWater) : null
-    const lastFertilizedInDays = lastFertilizer ? getDaysDifference(lastFertilizer) : null
-    const lastTreatedInDays = lastTreatment ? getDaysDifference(lastTreatment) : null
-
+    //ORDEN 4: Handlers
     const handleToggleSick = (checked) => {
-
         const updatedPlant = {
             ...plant,
             sick: checked
         }
-        console.log("updatedPlant: " + updatedPlant)
         updatePlant(updatedPlant)
     }
 
     const handleToggleMisting = (checked) => {
-
         const updatedPlant = {
             ...plant,
             misting: {
@@ -87,7 +76,6 @@ export default function PlantDetails() {
     }
 
     const handleToggleFertilization = (checked) => {
-
         const updatedPlant = {
             ...plant,
             fertilization: {
@@ -107,7 +95,7 @@ export default function PlantDetails() {
                 ...plant.comments,
                 {
                     id: crypto.randomUUID(),
-                    date: new Date().toISOString().split('T')[0],
+                    date: new Date().toISOString(),
                     text: text
                 }
             ]
@@ -126,9 +114,9 @@ export default function PlantDetails() {
         }
         const plantWithNewImg = {
             ...plant,
-            imageUrls: 
+            imageUrls:
                 uploadedCloudinaryUrl ? [...plant.imageUrls, uploadedCloudinaryUrl]
-                : plant.imageUrls
+                    : plant.imageUrls
         }
 
         updatePlant(plantWithNewImg)
@@ -141,9 +129,6 @@ export default function PlantDetails() {
         console.log("Planta eliminada")
         navigate("/")
     }
-
-    console.log("lastWater" + lastWater)
-    console.log(plant.comments)
 
     //SIMULAR TIMEOUT COMO SI COGIERA DE API Y CARGANDO
     return (
@@ -160,20 +145,25 @@ export default function PlantDetails() {
             </header>
 
             {/* IMÁGENES */}
-            <div className="flex gap-2 p-[20px] overflow-x-auto snap-x snap-mandatory">
-                <div className="aspect-square rounded-lg shrink-0 snap-center relative w-[30%]">
+            <div className={imgState === 'close' ? `flex gap-2 p-[20px] overflow-x-auto snap-x snap-mandatory` : `w-full h-screen overflow-x-auto scroll-smooth snap-x snap-mandatory gap-2 bg-[#000000cc] absolute z-[1000] flex`}>
+                <div className={imgState === 'close' ? `aspect-square rounded-lg shrink-0 snap-center relative w-[30%]` : `hidden`}>
                     <div className="aspect-square rounded-lg shrink-0 span-center justify-center align-center flex">
                         {
-                        uploadingImg ? 
-                        <img src={loadingImg} className="animate-spin loading-img" width="40px" height="40px"/>
-                        :
-                        <img src={plusImg} width="40px" height="40px"/>
+                            uploadingImg ?
+                                <img src={loadingImg} className="animate-spin loading-img" width="40px" height="40px" />
+                                :
+                                <img src={plusImg} width="40px" height="40px" />
                         }
                     </div>
                     <input className="absolute w-full h-full top-0 left-0 opacity-0" type="file" accept="image/*" onChange={(e) => handleSaveImg(e.target.files[0])} />
                 </div>
+                <button className={imgState === 'close' ? `hidden` : `flex rounded-full p-[10px] h-fit bg-accentStrong fixed top-3.5 right-3.5`} onClick={() => setImgState('close')}>
+                    <img width="25px" height="25px" src={plusImg} className="rotate-45" />
+                </button>
                 {plant.imageUrls?.map((url, i) => (
-                    <img key={i} className="aspect-square rounded-lg shadow shrink-0 snap-center w-[30%] object-cover" src={url} alt={`Foto ${i + 1} de ${plant.name}`} />
+                    <button onClick={() => setImgState('open')} className={imgState === 'close' ? `aspect-square rounded-lg shadow shrink-0 snap-center w-[30%] object-cover` : `w-full h-full flex-shrink-0 snap-center p-4`}>
+                        <img key={i} className="aspect-square rounded-lg shadow shrink-0 snap-center object-cover" src={url} alt={`Foto ${i + 1} de ${plant.name}`} />
+                    </button>
                 ))}
 
             </div>
@@ -268,7 +258,7 @@ export default function PlantDetails() {
                             <article key={comment.id} className="m-[15px] pl-[7px] text-left flex flex-col gap-[7px] border-l border-dark w-full">
                                 <p>{comment.text}</p>
 
-                                <span className="flex justify-between w-full p-1 rounded-lg w-fit font-bold">{comment.date}<button onClick={() => deleteComment(plant.id, comment.id)}> <img width="40" height="40" className="rounded-full p-[9px] bg-primary" src={trashImg} /> </button></span>
+                                <span className="flex justify-between w-full p-1 rounded-lg w-fit font-bold">{comment.date.split('T')[0]}<button onClick={() => deleteComment(plant.id, comment.id)}> <img width="40" height="40" className="rounded-full p-[9px] bg-primary" src={trashImg} /> </button></span>
                             </article>
                         )
                     })
