@@ -276,7 +276,6 @@ export default function PlantDetails() {
                 <Button handleClick={() => handleDeletePlant(plant)} imgClass="bg-red-500" imgUrl={trashImg} addedClass="bg-red-500 p-0 text-white bottom-[65px] left-[20px]" />
                 <ActionPanel plant={plant} />
             </section>
-
         </main>
     )
 }

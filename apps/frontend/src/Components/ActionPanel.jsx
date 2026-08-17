@@ -1,4 +1,4 @@
-import Button from '../Components/Button.jsx'
+import Button from '../Components/ActionPanelButton.jsx'
 // import {useState} from 'react'
 import {usePlantStore} from '../store/usePlantStore.js'
 import sprayImg from '../assets/spray.svg'

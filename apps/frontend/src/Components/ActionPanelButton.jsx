@@ -1,0 +1,5 @@
+export default function ActionPanelButton({handleClick, text, imgUrl, addedClass, imgClass}) {
+    return(
+        <button onClick={handleClick} className={`text-xs p-[10px] font-semibold rounded-md justify-items-center ${addedClass}`}><img src={imgUrl} width="40px" className={`p-[7px] bg-primary rounded-md ${imgClass}`} alt=""/>{text}</button>
+    )
+}

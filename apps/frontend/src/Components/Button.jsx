@@ -1,5 +1,20 @@
-export default function Button({handleClick, text, imgUrl, addedClass, imgClass}) {
+import {NavLink} from 'react-router-dom'
+
+const baseClassBtn = "bg-accentStrong w-[170px] shadow p-2 rounded-full font-medium self-center disabled:opacity-50 text-black"
+export default function Button({to, children, className = "", ...props}){
+    const combinedClassName= `${baseClassBtn} ${className}`.trim()
+    if (to){
+        return(
+            <NavLink className={combinedClassName} {...props}>
+                {children}
+            </NavLink>
+        )
+    }
+
     return(
-        <button onClick={handleClick} className={`text-xs p-[10px] font-semibold rounded-md justify-items-center ${addedClass}`}><img src={imgUrl} width="40px" className={`p-[7px] bg-primary rounded-md ${imgClass}`} alt=""/>{text}</button>
+        <button className={combinedClassName} {...props}>
+            {children}
+        </button>
     )
+
 }

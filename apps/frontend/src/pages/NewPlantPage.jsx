@@ -12,6 +12,8 @@ import { sendPhotoToPlanetNet } from "../services/plantService.js"
 import Loading from "../Components/Loading.jsx"
 import arrowImg from '../assets/arrowBack.svg'
 import loadingImg from '../assets/loadingLeaves.svg'
+import sadPlant from '../assets/sadPlant.jpg'
+import Button from '../Components/Button.jsx'
 
 export default function NewPlant() {
     const { addPlant, capturedPhoto, setCapturedPhoto, openCamera } = usePlantStore()
@@ -59,6 +61,7 @@ export default function NewPlant() {
         analyze()
 
     }, [capturedPhoto])
+
 
 
     useChangeTitle("Nueva Planta")
@@ -144,31 +147,44 @@ export default function NewPlant() {
         }
     }
 
+const scorePercent = capturedPhotoData ? Math.round(capturedPhotoData.score * 100) : null
+
     return (
         <>
             {capturedPhoto ? (analizyng ? (
-                <Loading text="Analizando imagen..." img={loadingImg}/>)
+                <Loading text="Analizando imagen..." img={loadingImg} />)
                 :
                 (<section className={`${isDiagnosisAccepted ? `hidden` : "justify-center items-center flex flex-col"}`}>
                     {diagnosisError ? (
-                        <>
+                        <div className="justify-items-center content-center items-center h-[calc(100vh-60px)] grid gap-3">
                             <p>Imagen no reconocida</p>
-                            <button onClick={openCamera}>Probar de nuevo</button>
-                            <button onClick={navigateToNewPlant}>Añadir datos manualmente</button>
-                        </>
+                            <img src={sadPlant} className="aspect-square rounded-full shadow border-6 shrink-0 snap-center w-[30%] object-cover" alt="" />
+                            <Button onClick={openCamera}>Probar de nuevo</Button>
+                            <Button onClick={navigateToNewPlant}>Añadir datos manualmente</Button>
+                        </div>
                     ) : (
-                        <>
-                            <p>Nombres científico: {capturedPhotoData?.scientificNameWithoutAuthor}</p>
-                            <p>Nombres comunes: {capturedPhotoData?.commonNames?.[0]}</p>
-                            <p>Coindicencia: {capturedPhotoData?.score}%</p>
+                        <div className="justify-items-center content-center items-center  grid gap-3">
                             <img key="captured"
-                                className="aspect-square rounded-full shadow border-6 shrink-0 snap-center w-[30%] object-cover"
+                                className="aspect-square rounded-lg shadow shrink-0 snap-center w-100 object-cover"
                                 src={URL.createObjectURL(capturedPhoto)}
                                 alt="Foto capturada"
                             />
-                            <button onClick={() => setIsDiagnosisAccepted(true)}>Aceptar</button>
-                            <button onClick={openCamera}>Probar de nuevo</button>
-                        </>
+                            <p>Nombre científico: {capturedPhotoData?.scientificName}</p>
+                            <p>Nombres comunes: {capturedPhotoData?.commonNames?.[0]}</p>
+                            <p>Coindicencia: {scorePercent}%</p>
+                            <input className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-accentStrong"
+                                type="range"
+                                id="progreso"
+                                name="progreso"
+                                min="0"
+                                max="100"
+                                value={scorePercent}
+                                step="1"
+                            />
+
+                            <Button onClick={() => setIsDiagnosisAccepted(true)}>Aceptar</Button>
+                            <Button onClick={openCamera}>Probar de nuevo</Button>
+                        </div>
                     )}
                 </section>
                 )) : null}
@@ -182,7 +198,7 @@ export default function NewPlant() {
                         <h1>Nueva planta</h1>
 
                     </header>
-                    <form className="p-5 flex flex-col gap-[10px] pb-[70px]" onSubmit={(e) => handleSubmit(e)} autoComplete="off">
+                    <form className="mt-[60px] p-5 flex flex-col gap-[10px] pb-[70px]" onSubmit={(e) => handleSubmit(e)} autoComplete="off">
 
                         <CustomInput text="Nombre" type="text" placeholder="Introduce el nombre" name="name" />
                         <CustomDatePicker name="acquisition" placeholderText="Fecha adquisición" required="true" text="Fecha adquisición" selected={acqDate} handleOnChange={(date) => setAcqDate(date)} />
