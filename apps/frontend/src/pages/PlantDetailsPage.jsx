@@ -145,7 +145,7 @@ export default function PlantDetails() {
             </header>
 
             {/* IMÁGENES */}
-            <div className={imgState === 'close' ? `flex gap-2 p-[20px] overflow-x-auto snap-x snap-mandatory` : `w-full h-screen overflow-x-auto scroll-smooth snap-x snap-mandatory gap-2 bg-[#000000cc] absolute z-[1000] flex`}>
+            <div className={imgState === 'close' ? `flex gap-2 p-[20px] overflow-x-auto snap-x snap-mandatory` : `top-[0] left-[0] w-full h-screen overflow-x-auto scroll-smooth snap-x snap-mandatory gap-2 bg-[#000000cc] absolute z-[1000] flex`}>
                 <div className={imgState === 'close' ? `aspect-square rounded-lg shrink-0 snap-center relative w-[30%]` : `hidden`}>
                     <div className="aspect-square rounded-lg shrink-0 span-center justify-center align-center flex">
                         {
@@ -161,7 +161,7 @@ export default function PlantDetails() {
                     <img width="25px" height="25px" src={plusImg} className="rotate-45" />
                 </button>
                 {plant.imageUrls?.map((url, i) => (
-                    <button onClick={() => setImgState('open')} className={imgState === 'close' ? `aspect-square rounded-lg shadow shrink-0 snap-center w-[30%] object-cover` : `w-full h-full flex-shrink-0 snap-center p-4`}>
+                    <button onClick={() => setImgState('open')} className={imgState === 'close' ? `size-fit aspect-square rounded-lg shadow shrink-0 snap-center w-[30%] object-cover` : `w-full h-full flex-shrink-0 snap-center p-4`}>
                         <img key={i} className="aspect-square rounded-lg shadow shrink-0 snap-center object-cover" src={url} alt={`Foto ${i + 1} de ${plant.name}`} />
                     </button>
                 ))}

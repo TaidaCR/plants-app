@@ -4,6 +4,7 @@ import { plantRouter } from './routes/plant.js';
 import { connectDB } from './config/db.js';
 import 'dotenv/config'
 import { uploadRouter } from './routes/upload.js';
+import {analyzePhotoRouter} from './routes/sendPhotoToAnalyze.js';
 
 const app = express()
 const port = process.env.PORT || 3000;
@@ -24,6 +25,7 @@ app.use(express.json())
 
 app.use('/plants', plantRouter)
 app.use('/upload', uploadRouter)
+app.use('/identify', analyzePhotoRouter)
 
 connectDB()
 

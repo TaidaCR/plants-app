@@ -13,11 +13,16 @@ const fetchWithTimeout = async (url, options = {}, timeoutMs = 30000) => {
     }
 }
 
-
 //Hook personalizado
 export const usePlantStore = create((set) => ({
     plants: [],
     loading: false,
+    isCameraOpen: false,
+
+    openCamera: () => set({ isCameraOpen: true }),
+    closeCamera: () => set({ isCameraOpen: false }),
+    capturedPhoto: null,
+    setCapturedPhoto: (photo) => set({capturedPhoto: photo}),
 
     fetchPlants: async () => {
         set({ loading: true })

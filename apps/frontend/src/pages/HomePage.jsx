@@ -3,9 +3,9 @@ import { NavLink } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { useChangeTitle } from '../hooks/setPageTitle.jsx'
 import { usePlantStore } from '../store/usePlantStore.js'
-import imgSick from '../assets/sick.svg'
-import imgDrop from '../assets/drop.svg'
-import imgPlus from '../assets/plus.svg'
+import imgSick from '../assets/customSick.svg'
+import imgDrop from '../assets/customDrop.svg'
+import NewOptionsButton from '../Components/NewOptions.jsx'
 import imgPlant from '../assets/plant.svg'
 import * as Switch from '@radix-ui/react-switch'
 
@@ -16,7 +16,6 @@ export default function HomePage() {
     useEffect(() => {
         fetchPlants()
     }, [])
-
 
     const locationListSet = [...new Set(plants.map(plant => plant.location))]
     const [locationFilter, setLocationFilter] = useState("0")
@@ -40,8 +39,8 @@ export default function HomePage() {
 
     return (
         <>
-            <section className="p-[20px] flex flex-col gap-[15px] pb-[90px]">
-                <h1>Mis plantas</h1>
+            <section id="home-section" className="p-[20px] flex flex-col gap-[15px] pb-[90px]">
+                <h1>Mi Jardin</h1>
                 <input onChange={handleInputChange} placeholder="Buscar..." className="!rounded-[5px] bg-red-100 p-[5px] h-[40px] !max-w-none w-full" type="search"></input>
                 <div className="bg-secondary rounded-md">
                     <h2>Filtros</h2>
@@ -60,7 +59,8 @@ export default function HomePage() {
                         </Switch.Root>
                     </div>
                 </div>
-                <NavLink to="/newplant" className="fixed bottom-[65px] right-[20px] z-[10] w-12 h-12 flex items-center justify-center bg-accentStrong rounded-full text-white shadow-lg"><img src={imgPlus} alt="" width="30px" /></NavLink>
+                <NewOptionsButton/>
+
                 <div className=" grid grid-cols-3 gap-3">
                     {/* HACER FILTRADO PREVIO */}
                     {filteredPlants.length > 0 ?
@@ -80,8 +80,11 @@ export default function HomePage() {
                                             <img src={imgPlant} alt={plant.name} className="aspect-square object-cover rounded-md" />
                                         </NavLink>}
                                     <h2>{plant.name}</h2>
-                                    {plant.sick ? <img className="absolute  top-[95px] right-[-7px]" src={imgSick} width="25" height="25" /> : ""}
-                                    {needsToWater ? <img className="absolute top-[-5px] right-[-7px]" src={imgDrop} width="25" height="25" /> : ""}
+                                    <div className="absolute top-0 right-[-10px] gap-1 flex flex-col">
+                                        {plant.sick ? <img src={imgSick} width="25" height="25" /> : ""}
+                                        {needsToWater ? <img src={imgDrop} width="25" height="25" /> : ""}
+                                    </div>
+
                                 </article>
                             )
                         })
