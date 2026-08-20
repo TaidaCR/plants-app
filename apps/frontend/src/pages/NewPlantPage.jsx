@@ -12,6 +12,7 @@ import { sendPhotoToPlanetNet } from "../services/plantService.js"
 import Loading from "../Components/Loading.jsx"
 import arrowImg from '../assets/arrowBack.svg'
 import loadingImg from '../assets/loadingLeaves.svg'
+import upLoadingImg from '../assets/loading.svg'
 import sadPlant from '../assets/sadPlant.jpg'
 import Button from '../Components/Button.jsx'
 
@@ -216,9 +217,16 @@ export default function NewPlant() {
                         <label className="pb-[10px] bg-white p-3 rounded-xl flex justify-between font-normal text-detail relative">
                             <span className="flex">Cargar imágenes</span>
                             <input multiple type="file" className="invisible !max-w-[40px] mr-[20px]" accept="image/*" onChange={(e) => handleSaveImgs(e.target.files)} />
-                            <div className="w-[40px] h-[40px] bg-accentStrong rounded-full justify-center flex items-center right-[20px]"> <img src={imgUploadImg} /></div>
+                            <div className="w-[40px] h-[40px] bg-accentStrong rounded-full justify-center flex items-center right-[20px]"> 
+                                {uploadingImg ?
+                                    <img src={upLoadingImg} className="animate-spin loading-img" width="40px" height="40px" />
+                                :
+                                    <img src={imgUploadImg}/>
+                                }
+                                </div>
                         </label>
                         <div className="flex gap-2 p-[20px] overflow-x-auto snap-x snap-mandatory">
+                            
                             {imageUrls?.map((url, i) => (
                                 <img key={i} className="aspect-square rounded-lg shadow shrink-0 snap-center w-[30%] object-cover" src={url} alt={`Foto ${i + 1} de ${name}`} />
                             ))}

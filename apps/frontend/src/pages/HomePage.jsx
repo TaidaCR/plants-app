@@ -90,7 +90,7 @@ export default function HomePage() {
                 </div>
                 <NewOptionsButton />
 
-                <div className=" grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-3">
                     {/* HACER FILTRADO PREVIO */}
                     {filteredPlants.length > 0 ?
 
