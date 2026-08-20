@@ -273,7 +273,9 @@ export default function PlantDetails() {
             </section>
             {/* ACCIONES */}
             <section className="justify-center flex">
-                <Button handleClick={() => handleDeletePlant(plant)} imgClass="bg-red-500" imgUrl={trashImg} addedClass="bg-red-500 p-0 text-white bottom-[65px] left-[20px]" />
+                <Button onClick={() => handleDeletePlant(plant)} className="bg-red-800 w-fit">
+                   <img src={trashImg} className="w-[40px] h-[40px] color-white"/> 
+                </Button>
                 <ActionPanel plant={plant} />
             </section>
         </main>

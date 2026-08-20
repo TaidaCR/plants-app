@@ -57,18 +57,15 @@ export default function NewPlant() {
                 setAnalyzing(false)
             }
         }
-
         analyze()
 
     }, [capturedPhoto])
-
-
 
     useChangeTitle("Nueva Planta")
 
     const handleSaveImgs = async (selectedImgs) => {
         setUploadingImg(true)
-        const filesArray = Array.from(selectedImgs)
+        const filesArray = Array.from(selectedImgs);
         var uploadedCloudinaryUrls = null;
 
         if (filesArray.length > 0) {
@@ -97,11 +94,24 @@ export default function NewPlant() {
         setCapturedPhoto(null)
     }
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setStatus('saving')
         // setUploading(true)
+        var uploadedCloudinaryCapturedPhoto
+        if (capturedPhoto) {
+            setUploadingImg(true)
+            const uploadPromise = upLoadImageToCloudinary(capturedPhoto)
+
+            // Esperamos a que TODAS las promesas se resuelvan
+            uploadedCloudinaryCapturedPhoto = await uploadPromise;
+
+            setImageUrls((prevUrls) =>
+                [...prevUrls,
+                    uploadedCloudinaryCapturedPhoto
+                ])
+            setUploadingImg(false)
+        }
 
         const data = new FormData(e.target)
         const newPlantData = Object.fromEntries(data.entries())
@@ -110,7 +120,7 @@ export default function NewPlant() {
             id: crypto.randomUUID(),
             name: newPlantData.name,
             location: newPlantData.location,
-            imageUrls: capturedPhoto ? [...imageUrls, URL.createObjectURL(capturedPhoto)] : imageUrls,
+            imageUrls: [uploadedCloudinaryCapturedPhoto, ...imageUrls].filter(Boolean),
             lightInfo: newPlantData.lightInfo,
             acquisition: acqDate ? acqDate.toISOString().split('T')[0] : null,
             sick: sick,
@@ -147,7 +157,7 @@ export default function NewPlant() {
         }
     }
 
-const scorePercent = capturedPhotoData ? Math.round(capturedPhotoData.score * 100) : null
+    const scorePercent = capturedPhotoData ? Math.round(capturedPhotoData.score * 100) : null
 
     return (
         <>
@@ -206,7 +216,7 @@ const scorePercent = capturedPhotoData ? Math.round(capturedPhotoData.score * 10
                         <label className="pb-[10px] bg-white p-3 rounded-xl flex justify-between font-normal text-detail relative">
                             <span className="flex">Cargar imágenes</span>
                             <input multiple type="file" className="invisible !max-w-[40px] mr-[20px]" accept="image/*" onChange={(e) => handleSaveImgs(e.target.files)} />
-                            <div className="w-[40px] h-[40px] bg-accentStrong rounded-full content-center justify-items-center absolute right-[20px]"> <img src={imgUploadImg} /></div>
+                            <div className="w-[40px] h-[40px] bg-accentStrong rounded-full justify-center flex items-center right-[20px]"> <img src={imgUploadImg} /></div>
                         </label>
                         <div className="flex gap-2 p-[20px] overflow-x-auto snap-x snap-mandatory">
                             {imageUrls?.map((url, i) => (
@@ -222,7 +232,6 @@ const scorePercent = capturedPhotoData ? Math.round(capturedPhotoData.score * 10
                                 />
                             )}
                         </div>
-
 
                         <CustomTextArea name="wateringInfo" text="Info de riego" />
                         <CustomInput name="wateringFrequencyDays" type="number" text="Frecuencia de riego" />

@@ -6,7 +6,8 @@ import { usePlantStore } from '../store/usePlantStore'
 import arrowImg from '../assets/arrowBack.svg'
 import CustomInput from '../Components/CustomInput';
 import CustomTextArea from '../Components/CustomTextArea';
-import CustomDatePicker from '../Components/CustomDatePicker'
+import CustomDatePicker from '../Components/CustomDatePicker';
+import Button from '../Components/Button'
 
 //Misión: Conseguir los datos y asegurarse de que plant existe. Asi al recargar la página funcionaría
 export default function EditPlantPage() {
@@ -185,8 +186,8 @@ function PlantForm({ plant }) {
                         : <></>
                     }
                 </section>
-                <button type="submit" className="bg-green-500 text-white p-2 rounded mt-2">Guardar</button>
-                <NavLink type="submit" to={`/plantdetails/${plant.id}`} className="bg-red-500 text-white p-2 rounded mt-2">Cancelar</NavLink>
+                <Button type="submit">Guardar</Button>
+                <Button to={`/plantdetails/${plant.id}`} className="bg-red-800 text-white">Cancelar</Button>
             </form>
         </>
     )

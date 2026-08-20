@@ -8,6 +8,8 @@ import imgDrop from '../assets/customDrop.svg'
 import NewOptionsButton from '../Components/NewOptions.jsx'
 import imgPlant from '../assets/plant.svg'
 import * as Switch from '@radix-ui/react-switch'
+import Loading from "../Components/Loading.jsx"
+import loadingImg from '../assets/loadingLeaves.svg'
 
 export default function HomePage() {
     const { plants, loading, fetchPlants } = usePlantStore()
@@ -31,7 +33,34 @@ export default function HomePage() {
     const handleInputChange = (e) => {
         setSearchText(e.target.value)
     }
-    if (loading) return <p>Cargando plantas...</p>
+    if (loading) return <Loading img={loadingImg}><div class="flex space-x-1 text-2xl text-gray-800">
+        <span class="animate-bounce [animation-delay:0ms]">C</span>
+        <span class="animate-bounce [animation-delay:100ms]">a</span>
+        <span class="animate-bounce [animation-delay:200ms]">r</span>
+        <span class="animate-bounce [animation-delay:300ms]">g</span>
+        <span class="animate-bounce [animation-delay:400ms]">a</span>
+        <span class="animate-bounce [animation-delay:500ms]">n</span>
+        <span class="animate-bounce [animation-delay:600ms]">d</span>
+        <span class="animate-bounce [animation-delay:700ms]">o</span>
+
+        <span class="w-2"></span>
+
+        <span class="animate-bounce [animation-delay:0ms]">m</span>
+        <span class="animate-bounce [animation-delay:100ms]">i</span>
+
+        <span class="w-2"></span>
+
+        <span class="animate-bounce [animation-delay:200ms]">j</span>
+        <span class="animate-bounce [animation-delay:300ms]">a</span>
+        <span class="animate-bounce [animation-delay:400ms]">r</span>
+        <span class="animate-bounce [animation-delay:500ms]">d</span>
+        <span class="animate-bounce [animation-delay:600ms]">i</span>
+        <span class="animate-bounce [animation-delay:700ms]">n</span>
+
+        <span class="animate-bounce [animation-delay:800ms]">.</span>
+        <span class="animate-bounce [animation-delay:900ms]">.</span>
+        <span class="animate-bounce [animation-delay:1000ms]">.</span>
+    </div></Loading>
 
     const filteredPlants = plants.filter(p => (p.location === locationFilter || locationFilter === "0") && p.name?.toLowerCase().includes(searchText.toLowerCase()) && (showSick ? p.sick : true))
     console.log(filteredPlants)
@@ -59,7 +88,7 @@ export default function HomePage() {
                         </Switch.Root>
                     </div>
                 </div>
-                <NewOptionsButton/>
+                <NewOptionsButton />
 
                 <div className=" grid grid-cols-3 gap-3">
                     {/* HACER FILTRADO PREVIO */}

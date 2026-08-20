@@ -12,9 +12,9 @@ export default function ActionPanel({plant}) {
     return(
         <>
             <div className="shadow-md fixed bottom-[65px] actions-section bg-white rounded rounded-md col-span-3 justify-around flex gap-[10px] pr-[20px] pl-[20px]">
-                <Button imgUrl={dropImg} handleClick={() => waterPlant(plant.id)} text="Regar"/>
-                <Button addedClass={`${plant.fertilization.required ? "" : "hidden"}`} imgUrl={sprayImg} handleClick={() => fertilizePlant(plant.id)} text="Fertilizar"/>
-                <Button addedClass={`${plant.sick ? "" : "hidden"}`} imgUrl={pillImg} handleClick={() => treatPlant(plant.id)} text="Tratar"/>
+                <Button type="button" imgUrl={dropImg} handleClick={() => waterPlant(plant.id)} text="Regar"/>
+                <Button type="button" addedClass={`${plant.fertilization.required ? "" : "hidden"}`} imgUrl={sprayImg} handleClick={() => fertilizePlant(plant.id)} text="Fertilizar"/>
+                <Button type="button" addedClass={`${plant.sick ? "" : "hidden"}`} imgUrl={pillImg} handleClick={() => treatPlant(plant.id)} text="Tratar"/>
             </div>
         </>
     )
