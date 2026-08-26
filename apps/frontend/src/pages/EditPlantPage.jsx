@@ -7,7 +7,9 @@ import arrowImg from '../assets/arrowBack.svg'
 import CustomInput from '../Components/CustomInput';
 import CustomTextArea from '../Components/CustomTextArea';
 import CustomDatePicker from '../Components/CustomDatePicker';
+import CreatableCombobox from '../Components/CreatableCombobox'
 import Button from '../Components/Button'
+import { getNormalizedLocations } from '../utils/calculationTools'
 
 //Misión: Conseguir los datos y asegurarse de que plant existe. Asi al recargar la página funcionaría
 export default function EditPlantPage() {
@@ -21,7 +23,7 @@ export default function EditPlantPage() {
     const plant = plants.find(p => p.id === id)
 
     if (!plant) {
-        return <div className="pt-24 text-center">Cargando datos de la planta...</div>
+        return <div className="pt-24 text-center">Fallo al cargar/encontrar la planta</div>
     }
 
     // Si la planta existe, renderizamos el formulario de abajo pasándole la prop
@@ -29,7 +31,7 @@ export default function EditPlantPage() {
 }
 
 function PlantForm({ plant }) {
-    const { updatePlant } = usePlantStore()
+    const { updatePlant, plants } = usePlantStore()
     const navigate = useNavigate()
     useChangeTitle(`Editar ${plant.name}`)
 
@@ -66,8 +68,10 @@ function PlantForm({ plant }) {
     //ILUMINACIÓN
     const [lightInfo, setLightInfo] = useState(plant.lightInfo || "")
 
-
+    const locations = [...new Set(getNormalizedLocations(plants))]
+    console.log(locations)
     const handleSubmit = (e) => {
+
         e.preventDefault();
         const updatedPlant = {
             ...plant,
@@ -125,7 +129,7 @@ function PlantForm({ plant }) {
                     <h2 className="uppercase text-dark">Info general</h2>
                     <CustomInput type="text" text="Nombre:" placeholder={plant.name} value={name} handleOnChange={(e) => setName(e.target.value)} />
                     <CustomDatePicker text="Fecha adquisición:" name="acquisition" selected={acquisition} required="true" handleOnChange={(date) => setAcquisition(date)} />
-                    <CustomInput type="text" text="Localización:" placeholder={location} value={location} handleOnChange={(e) => setLocation(e.target.value)} />
+                    <CreatableCombobox setValue={setLocation} value={location} options={locations} />
                     <CustomTextArea text="Notas:" value={notes} handleOnChange={(e) => setNotes(e.target.value)} />
 
                 </section>

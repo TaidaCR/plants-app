@@ -1,13 +1,15 @@
 @import "tailwindcss";
 
-@theme{
+@theme {
   --color-primary: #aeedd5;
   --color-dark: #316d5b;
+  --color-bg: #f8faf8;
   --color-secondary: #e3efe6;
   --color-detail: #1e0c06;
-  --color-accent:#e9d6f9;
+  --color-accent: #e9d6f9;
   --color-accentStrong: #c183f0;
   --color-accentStrong: #8662b8;
+  --color-disabled: #bdbdbd;
 }
 
 :root {
@@ -63,9 +65,9 @@
 
 body {
   margin: 0;
-  background-color:#f8faf8;
+  background-color: #f8faf8;
   font-family: Afacad, sans-serif;
-  font-size:18px;
+  font-size: 18px;
 }
 
 #root {
@@ -90,20 +92,24 @@ h1 {
   font-size: 56px;
   letter-spacing: -1.68px;
   margin: 32px 0;
+
   @media (max-width: 1024px) {
     font-size: 36px;
     margin: 20px 0;
   }
 }
+
 h2 {
   font-size: 24px;
   line-height: 118%;
   letter-spacing: -0.24px;
   margin: 0 0 8px;
+
   @media (max-width: 1024px) {
     font-size: 20px;
   }
 }
+
 p {
   margin: 0;
 }
@@ -123,11 +129,11 @@ code {
   background: var(--code-bg);
 }
 
-input{
+input {
   border: 2px solid #dbdbdb;
-  border:none;
+  border: none;
   background-color: #e3efe6;
-  border-radius:50px;
-  padding:5px 15px;
-  max-width:170px;
+  border-radius: 50px;
+  padding: 5px 15px;
+  max-width: 170px;
 }

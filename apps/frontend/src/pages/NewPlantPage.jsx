@@ -2,6 +2,7 @@ import { useChangeTitle } from "../hooks/setPageTitle"
 import CustomDatePicker from "../Components/CustomDatePicker"
 import CustomInput from "../Components/CustomInput"
 import CustomTextArea from "../Components/CustomTextArea"
+import CreatableCombobox from "../Components/CreatableCombobox.jsx"
 import { usePlantStore } from "../store/usePlantStore"
 import imgUploadImg from "../assets/uploadImage.svg"
 import { useState, useEffect } from "react"
@@ -17,11 +18,11 @@ import sadPlant from '../assets/sadPlant.jpg'
 import Button from '../Components/Button.jsx'
 
 export default function NewPlant() {
-    const { addPlant, capturedPhoto, setCapturedPhoto, openCamera } = usePlantStore()
+    const { addPlant, capturedPhoto, setCapturedPhoto, openCamera, fetchPlants, plants } = usePlantStore()
     const [analizyng, setAnalyzing] = useState(false)
     const navigate = useNavigate()
     const [diagnosisError, setDiagnosisError] = useState(false)
-
+    const [plantName, setPlantName] = useState('')
     const [capturedPhotoData, setCapturedPhotoData] = useState(null)
     const [isDiagnosisAccepted, setIsDiagnosisAccepted] = useState(false)
     const [acqDate, setAcqDate] = useState(null)
@@ -31,14 +32,11 @@ export default function NewPlant() {
     const [mistingRequired, setMistingRequired] = useState(false)
     const [fertilizationRequired, setFertilizationRequired] = useState(false)
     const [status, setStatus] = useState('idle')
+    const locations = [...new Set(plants.filter(p => p.location).map(p => p.location.trim().toLowerCase().replace(/(^\w|\s\w)/g, letter => letter.toUpperCase())))]
+    const [location, setLocation] = useState('')
 
     useEffect(() => {
-        // document.querySelector("header").style.display = "none"
-        return () => {
-            setCapturedPhoto(null)
-            console.log('Desmontado')
-            // document.querySelector("header").style.display = "flex"
-        }
+        fetchPlants()
     }, [])
 
     useEffect(() => {
@@ -51,6 +49,7 @@ export default function NewPlant() {
                 // Usa la función auxiliar
                 const result = await sendPhotoToPlanetNet(capturedPhoto)
                 setCapturedPhotoData(result)
+                setPlantName(result.scientificName)
             } catch (error) {
                 console.error("Error identificando la planta:", error)
                 setDiagnosisError(true)
@@ -104,7 +103,7 @@ export default function NewPlant() {
             setUploadingImg(true)
             const uploadPromise = upLoadImageToCloudinary(capturedPhoto)
 
-            // Esperamos a que TODAS las promesas se resuelvan
+            // Esperamos una ÚNICA promesa
             uploadedCloudinaryCapturedPhoto = await uploadPromise;
 
             setImageUrls((prevUrls) =>
@@ -119,8 +118,9 @@ export default function NewPlant() {
 
         const newPlant = {
             id: crypto.randomUUID(),
-            name: newPlantData.name,
-            location: newPlantData.location,
+            //ESTO ESTÁ BIEN???
+            name: plantName,
+            location: location.trim().toLowerCase().replace(/(^\w|\s\w)/g, letter => letter.toUpperCase()),
             imageUrls: [uploadedCloudinaryCapturedPhoto, ...imageUrls].filter(Boolean),
             lightInfo: newPlantData.lightInfo,
             acquisition: acqDate ? acqDate.toISOString().split('T')[0] : null,
@@ -157,7 +157,6 @@ export default function NewPlant() {
             setStatus('error')
         }
     }
-
     const scorePercent = capturedPhotoData ? Math.round(capturedPhotoData.score * 100) : null
 
     return (
@@ -165,16 +164,17 @@ export default function NewPlant() {
             {capturedPhoto ? (analizyng ? (
                 <Loading text="Analizando imagen..." img={loadingImg} />)
                 :
-                (<section className={`${isDiagnosisAccepted ? `hidden` : "justify-center items-center flex flex-col"}`}>
+                (<section className={`${isDiagnosisAccepted ? `hidden` : "justify-center items-center flex flex-col h-dvh z-[2] bg-bg"}`}>
                     {diagnosisError ? (
-                        <div className="justify-items-center content-center items-center h-[calc(100vh-60px)] grid gap-3">
+                        <div className="justify-items-center content-center items-center grid gap-3">
                             <p>Imagen no reconocida</p>
                             <img src={sadPlant} className="aspect-square rounded-full shadow border-6 shrink-0 snap-center w-[30%] object-cover" alt="" />
                             <Button onClick={openCamera}>Probar de nuevo</Button>
                             <Button onClick={navigateToNewPlant}>Añadir datos manualmente</Button>
+                            <Button to="/">Cancelar</Button>
                         </div>
                     ) : (
-                        <div className="justify-items-center content-center items-center  grid gap-3">
+                        <div className="justify-items-center content-center items-center grid gap-3">
                             <img key="captured"
                                 className="aspect-square rounded-lg shadow shrink-0 snap-center w-100 object-cover"
                                 src={URL.createObjectURL(capturedPhoto)}
@@ -203,30 +203,31 @@ export default function NewPlant() {
             {(isDiagnosisAccepted || !capturedPhoto) &&
                 <>
                     <header className="fixed z-3 flex pt-[5px] pb-[5px] pr-[15px] pl-[15px] justify-between items-center w-full bg-secondary shadow top-0">
-                        <NavLink to='/' className="">
-                            <img width="25px" height="25px" src={arrowImg} />
+                        <NavLink to='/' className="" aria-label="Volver al menú principal">
+                            <img width="25px" height="25px" src={arrowImg} alt="" />
                         </NavLink>
                         <h1>Nueva planta</h1>
 
                     </header>
                     <form className="mt-[60px] p-5 flex flex-col gap-[10px] pb-[70px]" onSubmit={(e) => handleSubmit(e)} autoComplete="off">
 
-                        <CustomInput text="Nombre" type="text" placeholder="Introduce el nombre" name="name" />
+                        <CustomInput text="Nombre" type="text" placeholder="Introduce el nombre" name="name" value={plantName} handleOnChange={(e) => setPlantName(e.target.value)} />
                         <CustomDatePicker name="acquisition" placeholderText="Fecha adquisición" required="true" text="Fecha adquisición" selected={acqDate} handleOnChange={(date) => setAcqDate(date)} />
-                        <CustomInput text="Localización" type="text" placeholder="Introduce ubicación" name="location" />
+                        <CreatableCombobox setValue={setLocation} value={location} options={locations} />
+
                         <label className="pb-[10px] bg-white p-3 rounded-xl flex justify-between font-normal text-detail relative">
                             <span className="flex">Cargar imágenes</span>
                             <input multiple type="file" className="invisible !max-w-[40px] mr-[20px]" accept="image/*" onChange={(e) => handleSaveImgs(e.target.files)} />
-                            <div className="w-[40px] h-[40px] bg-accentStrong rounded-full justify-center flex items-center right-[20px]"> 
+                            <div className="w-[40px] h-[40px] bg-accentStrong rounded-full justify-center flex items-center right-[20px]">
                                 {uploadingImg ?
                                     <img src={upLoadingImg} className="animate-spin loading-img" width="40px" height="40px" />
-                                :
-                                    <img src={imgUploadImg}/>
+                                    :
+                                    <img src={imgUploadImg} />
                                 }
-                                </div>
+                            </div>
                         </label>
                         <div className="flex gap-2 p-[20px] overflow-x-auto snap-x snap-mandatory">
-                            
+
                             {imageUrls?.map((url, i) => (
                                 <img key={i} className="aspect-square rounded-lg shadow shrink-0 snap-center w-[30%] object-cover" src={url} alt={`Foto ${i + 1} de ${name}`} />
                             ))}

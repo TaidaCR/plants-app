@@ -10,6 +10,8 @@ import imgPlant from '../assets/plant.svg'
 import * as Switch from '@radix-ui/react-switch'
 import Loading from "../Components/Loading.jsx"
 import loadingImg from '../assets/loadingLeaves.svg'
+import { getNormalizedLocations, normalizeString } from '../utils/calculationTools.js'
+import CreatableCombobox from '../Components/CreatableCombobox.jsx'
 
 export default function HomePage() {
     const { plants, loading, fetchPlants } = usePlantStore()
@@ -19,13 +21,13 @@ export default function HomePage() {
         fetchPlants()
     }, [])
 
-    const locationListSet = [...new Set(plants.map(plant => plant.location))]
-    const [locationFilter, setLocationFilter] = useState("0")
+    const locationListSet = ["Todas", ...new Set(getNormalizedLocations(plants))]
+    const [locationFilter, setLocationFilter] = useState("Todas")
     const [searchText, setSearchText] = useState("")
     const [showSick, setShowSick] = useState(false)
 
-    const handleLocationFilter = (e) => {
-        setLocationFilter(e.target.value)
+    const handleLocationFilter = (val) => {
+        setLocationFilter(val)
     }
 
     useChangeTitle("Home")
@@ -33,36 +35,36 @@ export default function HomePage() {
     const handleInputChange = (e) => {
         setSearchText(e.target.value)
     }
-    if (loading) return <Loading img={loadingImg}><div class="flex space-x-1 text-2xl text-gray-800">
-        <span class="animate-bounce [animation-delay:0ms]">C</span>
-        <span class="animate-bounce [animation-delay:100ms]">a</span>
-        <span class="animate-bounce [animation-delay:200ms]">r</span>
-        <span class="animate-bounce [animation-delay:300ms]">g</span>
-        <span class="animate-bounce [animation-delay:400ms]">a</span>
-        <span class="animate-bounce [animation-delay:500ms]">n</span>
-        <span class="animate-bounce [animation-delay:600ms]">d</span>
-        <span class="animate-bounce [animation-delay:700ms]">o</span>
+    if (loading) return <Loading img={loadingImg}><div className="flex space-x-1 text-2xl text-gray-800">
+        <span className="animate-bounce [animation-delay:0ms]">C</span>
+        <span className="animate-bounce [animation-delay:100ms]">a</span>
+        <span className="animate-bounce [animation-delay:200ms]">r</span>
+        <span className="animate-bounce [animation-delay:300ms]">g</span>
+        <span className="animate-bounce [animation-delay:400ms]">a</span>
+        <span className="animate-bounce [animation-delay:500ms]">n</span>
+        <span className="animate-bounce [animation-delay:600ms]">d</span>
+        <span className="animate-bounce [animation-delay:700ms]">o</span>
 
-        <span class="w-2"></span>
+        <span className="w-2"></span>
 
-        <span class="animate-bounce [animation-delay:0ms]">m</span>
-        <span class="animate-bounce [animation-delay:100ms]">i</span>
+        <span className="animate-bounce [animation-delay:0ms]">m</span>
+        <span className="animate-bounce [animation-delay:100ms]">i</span>
 
-        <span class="w-2"></span>
+        <span className="w-2"></span>
 
-        <span class="animate-bounce [animation-delay:200ms]">j</span>
-        <span class="animate-bounce [animation-delay:300ms]">a</span>
-        <span class="animate-bounce [animation-delay:400ms]">r</span>
-        <span class="animate-bounce [animation-delay:500ms]">d</span>
-        <span class="animate-bounce [animation-delay:600ms]">i</span>
-        <span class="animate-bounce [animation-delay:700ms]">n</span>
+        <span className="animate-bounce [animation-delay:200ms]">j</span>
+        <span className="animate-bounce [animation-delay:300ms]">a</span>
+        <span className="animate-bounce [animation-delay:400ms]">r</span>
+        <span className="animate-bounce [animation-delay:500ms]">d</span>
+        <span className="animate-bounce [animation-delay:600ms]">i</span>
+        <span className="animate-bounce [animation-delay:700ms]">n</span>
 
-        <span class="animate-bounce [animation-delay:800ms]">.</span>
-        <span class="animate-bounce [animation-delay:900ms]">.</span>
-        <span class="animate-bounce [animation-delay:1000ms]">.</span>
+        <span className="animate-bounce [animation-delay:800ms]">.</span>
+        <span className="animate-bounce [animation-delay:900ms]">.</span>
+        <span className="animate-bounce [animation-delay:1000ms]">.</span>
     </div></Loading>
 
-    const filteredPlants = plants.filter(p => (p.location === locationFilter || locationFilter === "0") && p.name?.toLowerCase().includes(searchText.toLowerCase()) && (showSick ? p.sick : true))
+    const filteredPlants = plants.filter(p => (normalizeString(p.location) === normalizeString(locationFilter) || locationFilter === "Todas") && p.name?.toLowerCase().includes(searchText.toLowerCase()) && (showSick ? p.sick : true))
     console.log(filteredPlants)
     const today = new Date()
 
@@ -73,20 +75,13 @@ export default function HomePage() {
                 <input onChange={handleInputChange} placeholder="Buscar..." className="!rounded-[5px] bg-red-100 p-[5px] h-[40px] !max-w-none w-full" type="search"></input>
                 <div className="bg-secondary rounded-md">
                     <h2>Filtros</h2>
-                    <select onChange={handleLocationFilter} value={locationFilter}>
-                        <option value="0">Todas</option>
-                        {locationListSet.map((location) => {
-                            return (
-                                <option value={location}>{location}</option>
-                            )
-                        })}
-                    </select>
                     <div className="flex justify-between p-3">
                         <p>Enferma:</p>
                         <Switch.Root checked={showSick} onCheckedChange={() => setShowSick(!showSick)} className="w-11 h-6 bg-gray-300 data-[state=checked]:bg-accentStrong rounded-full relative transition-colors duration-200 ease-in-out outline-none cursor-pointer">
                             <Switch.Thumb className="block w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-200 ease-in-out translate-x-0.5 data-[state=checked]:translate-x-[22px]" />
                         </Switch.Root>
                     </div>
+                    <CreatableCombobox setValue={handleLocationFilter} value={locationFilter} options={locationListSet} justList={true} fieldClass="!bg-transparent" inputClass="!bg-white"/>
                 </div>
                 <NewOptionsButton />
 

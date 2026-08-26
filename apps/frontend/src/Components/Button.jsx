@@ -5,7 +5,7 @@ export default function Button({to, children, className = "", ...props}){
     const combinedClassName= `${baseClassBtn} ${className}`.trim()
     if (to){
         return(
-            <NavLink className={combinedClassName} {...props}>
+            <NavLink className={combinedClassName} to={to} {...props}>
                 {children}
             </NavLink>
         )
