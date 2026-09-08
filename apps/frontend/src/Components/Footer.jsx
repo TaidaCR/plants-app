@@ -6,7 +6,7 @@ export default function Footer(){
             {/* <img src={appLogo} className="h-[50px]"></img> */}
             <nav className="grow w-full content-center">
                 <ul className="flex  w-full gap-4 items-center justify-center">
-                    <li><NavLink to="/" >Mis plantas</NavLink></li>
+                    <li><NavLink to="/home" >Mis plantas</NavLink></li>
                     <li><NavLink to="/careplants">Cuidados</NavLink></li>
                 </ul>
             </nav>

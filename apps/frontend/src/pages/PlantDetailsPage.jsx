@@ -94,7 +94,7 @@ export default function PlantDetails() {
     const handleDeletePlant = (plant) => {
         deletePlant(plant, plant.id)
         console.log("Planta eliminada")
-        navigate("/")
+        navigate("/home")
     }
 
     //SIMULAR TIMEOUT COMO SI COGIERA DE API Y CARGANDO
@@ -102,7 +102,7 @@ export default function PlantDetails() {
         <main className="pb-[140px] pt-[70px]">
             {/* BARRA SUPERIOR ATRAS/NOMBRE/EDITAR */}
             <header className="fixed z-3 flex pt-[5px] pb-[5px] pr-[15px] pl-[15px] justify-between items-center w-full bg-secondary shadow top-0">
-                <NavLink to='/' className="">
+                <NavLink to='/home' className="">
                     <img width="25px" height="25px" src={arrowImg} />
                 </NavLink>
                 <h1 className="flex"> {plant.name}</h1>

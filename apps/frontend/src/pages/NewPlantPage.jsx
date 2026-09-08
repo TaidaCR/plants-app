@@ -152,7 +152,7 @@ export default function NewPlant() {
         try {
             await addPlant(newPlant)
             setCapturedPhoto(null)
-            navigate("/")
+            navigate("/home")
         } catch {
             setStatus('error')
         }
@@ -171,7 +171,7 @@ export default function NewPlant() {
                             <img src={sadPlant} className="aspect-square rounded-full shadow border-6 shrink-0 snap-center w-[30%] object-cover" alt="" />
                             <Button onClick={openCamera}>Probar de nuevo</Button>
                             <Button onClick={navigateToNewPlant}>Añadir datos manualmente</Button>
-                            <Button to="/">Cancelar</Button>
+                            <Button to="/home">Cancelar</Button>
                         </div>
                     ) : (
                         <div className="justify-items-center content-center items-center grid gap-3">
@@ -203,7 +203,7 @@ export default function NewPlant() {
             {(isDiagnosisAccepted || !capturedPhoto) &&
                 <>
                     <header className="fixed z-3 flex pt-[5px] pb-[5px] pr-[15px] pl-[15px] justify-between items-center w-full bg-secondary shadow top-0">
-                        <NavLink to='/' className="" aria-label="Volver al menú principal">
+                        <NavLink to='/home' className="" aria-label="Volver al menú principal">
                             <img width="25px" height="25px" src={arrowImg} alt="" />
                         </NavLink>
                         <h1>Nueva planta</h1>

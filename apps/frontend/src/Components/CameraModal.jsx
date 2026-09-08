@@ -50,7 +50,7 @@ export default function CameraModal() {
   const handleClose = () => {
     closeCamera()
     setCapturedPhoto(null)
-    navigate("/")
+    navigate("/home")
   }
 
   if (!isCameraOpen) return null

@@ -8,6 +8,7 @@
     "dev": "pnpm --parallel dev"
   },
   "dependencies": {
-    "@headlessui/react": "^2.2.10"
+    "@headlessui/react": "^2.2.10",
+    "firebase": "^12.18.0"
   }
 }
