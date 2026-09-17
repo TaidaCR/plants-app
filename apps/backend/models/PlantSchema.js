@@ -37,6 +37,7 @@ const mistingSchema = new mongoose.Schema({
 
 // --- ESQUEMA PRINCIPAL DE LA PLANTA ---
 const plantSchema = new mongoose.Schema({
+    userId:{ type: String, required:true},
     name: { type: String, required: true },
     location: String,
     imageUrls: [String],

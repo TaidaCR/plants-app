@@ -1,5 +1,14 @@
 import { create } from 'zustand'
-// import initialPlants from '../data/plants.json'
+import { auth } from "../firebase/config"
+import { onAuthStateChanged } from 'firebase/auth'
+
+const waitForAuth = () => new Promise((resolve) => {
+    //Listener
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+        unsubscribe()
+        resolve(user)
+    })
+})
 
 //Añadimos helper timeout para el fetch
 const fetchWithTimeout = async (url, options = {}, timeoutMs = 30000) => {
@@ -22,12 +31,21 @@ export const usePlantStore = create((set) => ({
     openCamera: () => set({ isCameraOpen: true }),
     closeCamera: () => set({ isCameraOpen: false }),
     capturedPhoto: null,
-    setCapturedPhoto: (photo) => set({capturedPhoto: photo}),
+    setCapturedPhoto: (photo) => set({ capturedPhoto: photo }),
 
     fetchPlants: async () => {
         set({ loading: true })
         try {
-            const res = await fetch('https://plants-app-backend.onrender.com/plants')
+            const user = await waitForAuth()  // espera a que Firebase resuelva
+            if (!user) { set({ loading: false }); return }
+
+            const token = await auth.currentUser.getIdToken()
+            const res = await fetch('https://plants-app-backend.onrender.com/plants', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
             if (!res.ok) throw new Error('Error al conectar a la API')
             const data = await res.json()
             set({ plants: data, loading: false })
@@ -103,10 +121,13 @@ export const usePlantStore = create((set) => ({
     updatePlant: async (updatedPlant) => {
         set({ loading: true, error: null })
         try {
-            const res = await fetch(`https://plants-app-backend.onrender.com/plants/${updatedPlant.id}`, {
+            if (!auth.currentUser) { set({ loading: false }); return }
+            const token = await auth.currentUser.getIdToken()
+            const res = await fetch(`https://plants-app-backend.onrender.com/${updatedPlant.id}`, {
                 method: 'PATCH',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(updatedPlant)
             })
@@ -139,8 +160,13 @@ export const usePlantStore = create((set) => ({
     deletePlant: async (plant) => {
         set({ error: null, loading: true })
         try {
+            if (!auth.currentUser) { set({ loading: false }); return }
+            const token = await auth.currentUser.getIdToken()
             const res = await fetch(`https://plants-app-backend.onrender.com/plants/${plant.id}`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
             })
 
             if (!res.ok) throw new Error('Error en la petición')
@@ -158,13 +184,17 @@ export const usePlantStore = create((set) => ({
     addPlant: async (newPlant) => {
         set({ loading: true, error: null })
         try {
+            if (!auth.currentUser) { set({ loading: false }); return }
+            const token = await auth.currentUser.getIdToken()
             const res = await fetchWithTimeout('https://plants-app-backend.onrender.com/plants', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
                 body: JSON.stringify(newPlant)
             })
-
-
+            console.log("token:", token)
             if (!res.ok) throw new Error('Error en la petición')
 
             const result = await res.json()

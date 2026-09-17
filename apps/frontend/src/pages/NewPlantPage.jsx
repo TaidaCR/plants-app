@@ -16,6 +16,7 @@ import loadingImg from '../assets/loadingLeaves.svg'
 import upLoadingImg from '../assets/loading.svg'
 import sadPlant from '../assets/sadPlant.jpg'
 import Button from '../Components/Button.jsx'
+import { useAuthStore } from "../store/useAuthStore.js"
 
 export default function NewPlant() {
     const { addPlant, capturedPhoto, setCapturedPhoto, openCamera, fetchPlants, plants } = usePlantStore()
@@ -34,6 +35,7 @@ export default function NewPlant() {
     const [status, setStatus] = useState('idle')
     const locations = [...new Set(plants.filter(p => p.location).map(p => p.location.trim().toLowerCase().replace(/(^\w|\s\w)/g, letter => letter.toUpperCase())))]
     const [location, setLocation] = useState('')
+    const {user} = useAuthStore()
 
     useEffect(() => {
         fetchPlants()
@@ -118,6 +120,7 @@ export default function NewPlant() {
 
         const newPlant = {
             id: crypto.randomUUID(),
+            userId: user.uid,
             //ESTO ESTÁ BIEN???
             name: plantName,
             location: location.trim().toLowerCase().replace(/(^\w|\s\w)/g, letter => letter.toUpperCase()),
@@ -210,7 +213,7 @@ export default function NewPlant() {
 
                     </header>
                     <form className="mt-[60px] p-5 flex flex-col gap-[10px] pb-[70px]" onSubmit={(e) => handleSubmit(e)} autoComplete="off">
-
+                        <p>FIREBASE - Usuario: {user.name}</p>
                         <CustomInput text="Nombre" type="text" placeholder="Introduce el nombre" name="name" value={plantName} handleOnChange={(e) => setPlantName(e.target.value)} />
                         <CustomDatePicker name="acquisition" placeholderText="Fecha adquisición" required="true" text="Fecha adquisición" selected={acqDate} handleOnChange={(date) => setAcqDate(date)} />
                         <CreatableCombobox setValue={setLocation} value={location} options={locations} />

@@ -3,10 +3,12 @@ import { Routes, Route } from 'react-router-dom'
 import { lazy, Suspense } from 'react'
 import ScrollToTop from './Components/ScrollToTop.jsx'
 import { usePlantStore } from './store/usePlantStore.js'
-import { useAuthStore } from './store/useAuthStore.js'
+import {useAuthStore} from "./store/useAuthStore.js"
 import CameraModal from './Components/CameraModal.jsx'
 import Loading from './Components/Loading.jsx'
 import loadingImg from './assets/loadingLeaves.svg'
+import {onChangeUser} from "./firebase/config.js"
+import {useEffect} from "react"
 
 const HomePage = lazy(() => import("./pages/HomePage.jsx"))
 const LoginPage = lazy(() => import("./pages/LoginPage.jsx"))
@@ -14,10 +16,16 @@ const PlantDetailsPage = lazy(() => import("./pages/PlantDetailsPage.jsx"))
 const NewPlantPage = lazy(() => import("./pages/NewPlantPage.jsx"))
 const EditPlantPage = lazy(() => import("./pages/EditPlantPage.jsx"))
 const CarePlantsPage = lazy(() => import("./pages/CarePlantsPage.jsx"))
+const UserDetailsPage = lazy(() => import("./pages/UserDetailsPage.jsx"))
 
 function App() {
+    const {user, setUser} = useAuthStore()
+
+    useEffect(() => {
+      onChangeUser(setUser)
+    }, [])
+ 
   const { isCameraOpen } = usePlantStore()
-  const { isLoggedIn } = useAuthStore()
   return (
     <>
       {/* <Header /> */}
@@ -38,6 +46,7 @@ function App() {
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<LoginPage />}></Route>
+          <Route path="/userdetails" element={<UserDetailsPage />}></Route>
           <Route path="/home" element={<HomePage />} />
           <Route path="/plantdetails/:id" element={<PlantDetailsPage />} />
           <Route path="/newplant" element={<NewPlantPage />} />
@@ -46,7 +55,7 @@ function App() {
         </Routes>
         {isCameraOpen ? <CameraModal /> : ""}
       </Suspense>
-      {isLoggedIn && <Footer />} 
+      {user && <Footer />}
     </>
   )
 }

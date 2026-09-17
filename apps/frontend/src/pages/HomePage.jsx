@@ -12,13 +12,15 @@ import Loading from "../Components/Loading.jsx"
 import loadingImg from '../assets/loadingLeaves.svg'
 import { getNormalizedLocations, normalizeString } from '../utils/calculationTools.js'
 import CreatableCombobox from '../Components/CreatableCombobox.jsx'
+import { useAuthStore } from "../store/useAuthStore.js"
 
 export default function HomePage() {
     const { plants, loading, fetchPlants } = usePlantStore()
-    // const plants = usePlantStore((state) => state.plants)
+    const { user } = useAuthStore()
 
     useEffect(() => {
         fetchPlants()
+        user ? console.log("Plantas de: ", user.name) : console.log("No hay usuario autenticado")
     }, [])
 
     const locationListSet = ["Todas", ...new Set(getNormalizedLocations(plants))]
@@ -81,7 +83,7 @@ export default function HomePage() {
                             <Switch.Thumb className="block w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-200 ease-in-out translate-x-0.5 data-[state=checked]:translate-x-[22px]" />
                         </Switch.Root>
                     </div>
-                    <CreatableCombobox setValue={handleLocationFilter} value={locationFilter} options={locationListSet} justList={true} fieldClass="!bg-transparent" inputClass="!bg-white"/>
+                    <CreatableCombobox setValue={handleLocationFilter} value={locationFilter} options={locationListSet} justList={true} fieldClass="!bg-transparent" inputClass="!bg-white" />
                 </div>
                 <NewOptionsButton />
 

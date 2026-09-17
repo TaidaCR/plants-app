@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -13,3 +13,18 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
+
+//Listener
+export const onChangeUser = (setUser) => {
+  onAuthStateChanged(auth, (user) => {
+    const usuario = user ? user : null
+    setUser(usuario)
+  })
+}
+
+const onSingOut = () => {
+  const auth = getAuth()
+  signOut(auth)
+}
+
+export default onSingOut

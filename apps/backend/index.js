@@ -4,8 +4,8 @@ import { plantRouter } from './routes/plant.js';
 import { connectDB } from './config/db.js';
 import 'dotenv/config'
 import { uploadRouter } from './routes/upload.js';
-import {analyzePhotoRouter} from './routes/sendPhotoToAnalyze.js';
-
+import { analyzePhotoRouter } from './routes/sendPhotoToAnalyze.js';
+import { authMiddleware } from './middleware/authMiddleware.js';
 const app = express()
 const port = process.env.PORT || 3000;
 const acceptedOrigins = process.env.ACCEPTED_ORIGINS ? process.env.ACCEPTED_ORIGINS.split(",") : []
@@ -23,7 +23,8 @@ app.use(cors({
 //Middleware global
 app.use(express.json())
 
-app.use('/plants', plantRouter)
+//Middleware para verificar el token de autenticación en todas las rutas
+app.use('/plants', authMiddleware, plantRouter)
 app.use('/upload', uploadRouter)
 app.use('/identify', analyzePhotoRouter)
 
