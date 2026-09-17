@@ -123,7 +123,7 @@ export const usePlantStore = create((set) => ({
         try {
             if (!auth.currentUser) { set({ loading: false }); return }
             const token = await auth.currentUser.getIdToken()
-            const res = await fetch(`https://plants-app-backend.onrender.com/${updatedPlant.id}`, {
+            const res = await fetch(`https://plants-app-backend.onrender.com/plants/${updatedPlant.id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

@@ -1,12 +1,10 @@
 import { useAuthStore } from "../store/useAuthStore"
-import { useNavigate } from "react-router-dom"
 import Button from '../Components/Button'
 import { auth } from "../firebase/config.js"
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth"
+import { signInWithRedirect, GoogleAuthProvider } from "firebase/auth"
 
 export default function LoginPage() {
-    const { user, setUser } = useAuthStore()
-    const navigate = useNavigate()
+    const { user } = useAuthStore()
 
     const handleGoogleLogin = async () => {
         const provider = new GoogleAuthProvider()
@@ -16,14 +14,8 @@ export default function LoginPage() {
         });
 
         try {
-            // 1. Abre el pop-up nativo de Google
-            const result = await signInWithPopup(auth, provider)
-            const usuario = result.user
-            setUser(usuario) // Guarda la info del usuario en el store
-  
-            console.log("user", user)
-            console.log("Resultado:", result)
-            navigate('/home')
+            // 1. Redirige a Google para autenticar
+            await signInWithRedirect(auth, provider)
         } catch (error) {
             console.error("Error al autenticar con Google:", error)
         }
