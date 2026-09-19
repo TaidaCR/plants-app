@@ -1,9 +1,11 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "firebase/auth";
+
+const isLocalHost = window.location.hostname === "localhost";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  authDomain: isLocalHost ? import.meta.env.VITE_FIREBASE_AUTH_DOMAIN : "plants-app-front.vercel.app",
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
@@ -22,9 +24,13 @@ export const onChangeUser = (setUser) => {
   })
 }
 
-const onSingOut = () => {
-  const auth = getAuth()
-  signOut(auth)
+export const onSignOut = () => {
+  return signOut(auth)
 }
 
-export default onSingOut
+//Firebase guarda token en localstorage.
+//Sesion se mantiene aunque cierra nacegador, apague movil, recargue pagina
+setPersistence(auth, browserLocalPersistence).catch((error) => {
+  console.error("Error setting persistence:", error)
+})
+

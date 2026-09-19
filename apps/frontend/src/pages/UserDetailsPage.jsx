@@ -1,9 +1,8 @@
 import { useNavigate } from "react-router-dom"
-import { getAuth, signOut } from "firebase/auth"
+import { onSignOut, auth } from "../firebase/config.js"
 
 export default function UserDetailsPage() {
     const navigate = useNavigate()
-    const auth = getAuth()
 
     //Revisar. Pasarlo a store???
     const currentUser = auth.currentUser
@@ -13,7 +12,7 @@ export default function UserDetailsPage() {
 
     const handleSignOut = async () => {
         try {
-            await signOut(auth)
+            await onSignOut()
             navigate("/")
         } catch (error) {
             console.error("Error al cerrar sesión:", error)
