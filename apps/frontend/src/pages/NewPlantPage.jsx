@@ -213,7 +213,6 @@ export default function NewPlant() {
 
                     </header>
                     <form className="mt-[60px] p-5 flex flex-col gap-[10px] pb-[70px]" onSubmit={(e) => handleSubmit(e)} autoComplete="off">
-                        <p>FIREBASE - Usuario: {user.name}</p>
                         <CustomInput text="Nombre" type="text" placeholder="Introduce el nombre" name="name" value={plantName} handleOnChange={(e) => setPlantName(e.target.value)} />
                         <CustomDatePicker name="acquisition" placeholderText="Fecha adquisición" required="true" text="Fecha adquisición" selected={acqDate} handleOnChange={(date) => setAcqDate(date)} />
                         <CreatableCombobox setValue={setLocation} value={location} options={locations} />
