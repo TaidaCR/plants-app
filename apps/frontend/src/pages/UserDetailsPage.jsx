@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import { onSignOut, auth } from "../firebase/config.js"
+import trashImg from '../assets/trash.svg'
 
 export default function UserDetailsPage() {
     const navigate = useNavigate()
@@ -8,7 +9,7 @@ export default function UserDetailsPage() {
     const currentUser = auth.currentUser
     const name = currentUser?.displayName
     const email = currentUser?.email
-    const photo = currentUser?.photoURL
+    // const photo = currentUser?.photoURL
 
     const handleSignOut = async () => {
         try {
@@ -24,7 +25,7 @@ export default function UserDetailsPage() {
             <h1>Mi perfil</h1>
 
             <div className="flex flex-col items-center gap-4 w-full max-w-[320px]">
-                {photo ? (
+                {/* {photo ? (
                     <img
                         src={photo}
                         alt={name}
@@ -34,7 +35,7 @@ export default function UserDetailsPage() {
                     <div className="w-[96px] h-[96px] rounded-full bg-secondary flex items-center justify-center text-3xl text-dark font-medium shadow-md">
                         {name ? name[0] : "?"}
                     </div>
-                )}
+                )} */}
 
                 <div className="w-full bg-secondary rounded-xl p-5 flex flex-col gap-3">
                     <div className="flex flex-col items-start gap-1">
@@ -52,9 +53,10 @@ export default function UserDetailsPage() {
 
                 <button
                     onClick={handleSignOut}
-                    className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 rounded-xl shadow transition-colors duration-200 cursor-pointer mt-2"
+                    className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl border-2 border-red-400 text-red-600 font-medium bg-white shadow-sm hover:bg-red-50 hover:border-red-500 active:scale-[0.98] transition-all duration-150 cursor-pointer"
                 >
-                    Cerrar sesión
+                    <img src={trashImg} className="w-5 h-5 text-red-600" alt="" />
+                    <span>Cerrar sesión</span>
                 </button>
             </div>
         </section>

@@ -290,7 +290,11 @@ export default function NewPlant() {
                         }
                         <CustomTextArea text="Notas" name="notes" />
 
-                        <button disabled={(status === 'saving') || uploadingImg} className="bg-accentStrong w-[170px] shadow p-2 rounded-full font-medium self-center disabled:opacity-50 text-black" type="submit">
+                        <button
+                            disabled={(status === 'saving') || uploadingImg}
+                            className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl border-2 border-accentStrong text-accentStrong font-medium bg-white shadow-sm hover:bg-accentStrong/10 hover:border-accentStrong active:scale-[0.98] transition-all duration-150 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                            type="submit"
+                        >
                             {uploadingImg
                                 ? 'Cargando imagen...'
                                 : status === 'saving'
@@ -298,7 +302,8 @@ export default function NewPlant() {
                                     : status === 'error'
                                         ? 'Error, inténtalo de nuevo'
                                         : 'Guardar planta'
-                            }            </button>
+                            }
+                        </button>
                         {status === 'error' && (
                             <p className="text-red-500 text-center">Error al guardar. Comprueba tu conexión y vuelve a intentarlo.</p>
                         )}

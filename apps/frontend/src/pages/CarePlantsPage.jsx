@@ -52,25 +52,33 @@ export default function CarePlantsPage() {
                         plantsToCare.map((plant) => {
                             return (
                                 <button onClick={functionality === 'waterPlant' ? () => waterPlant(plant.id) : (functionality === 'fertilizePlant' ? () => fertilizePlant(plant.id) : () => treatPlant(plant.id))}>
-                                    <img className="aspect-square rounded-lg shadow shrink-0 w-[90%] snap-center" src={plant.imageUrls.length > 0 ? plant.imageUrls[0] : imgPlant}></img>
+                                    <img className="aspect-square rounded-lg shadow shrink-0 w-[90%] snap-center object-cover" src={plant.imageUrls.length > 0 ? plant.imageUrls[0] : imgPlant}></img>
                                     <h2 className="!text-[14px] !leading-[13px] !mt-[3px]">{plant.name}</h2>
                                 </button>
                             )
                         })}
                 </div>
                 <div className="grid grid-cols-4 gap-3 items-start border-top border-t opacity-[0.5] pt-4">
-                    <p className="col-span-4"> {functionality === 'waterPlant' ? <span>Regadas recientemente</span> : functionality === 'treatPlant' ? <span>Tratadas recientemente</span> : <span>Fertilizadas recientemente</span>}</p>
                     {lastActionsPlants.length === 0 ?
                         <p className="col-span-4">No hay plantas {functionality === 'waterPlant' ? <span>regadas recientemente</span> : functionality === 'treatPlant' ? <span>tratadas recientemente</span> : <span>fertilizadas recientemente</span>}</p>
                         :
-                        lastActionsPlantsSorted.map((plant) => {
-                            return (
-                                <button>
-                                    <img className="aspect-square rounded-lg shadow shrink-0 w-[90%] snap-center" src={plant.imageUrls.length > 0 ? plant.imageUrls[0] : imgPlant}></img>
-                                    <h2>{plant.name}</h2>
-                                </button>
-                            )
-                        })}
+                        <>
+                            <p className="col-span-4"> {functionality === 'waterPlant' ? <span>Regadas recientemente</span> : functionality === 'treatPlant' ? <span>Tratadas recientemente</span> : <span>Fertilizadas recientemente</span>}</p>
+
+                            {
+                                lastActionsPlantsSorted.map((plant) => {
+                                    return (
+                                        <button>
+                                            <img className="aspect-square rounded-lg shadow shrink-0 w-[90%] snap-center object-cover" src={plant.imageUrls.length > 0 ? plant.imageUrls[0] : imgPlant}></img>
+                                            <h2 className="!text-[14px] !leading-[13px] !mt-[3px]">{plant.name}</h2>
+                                        </button>
+
+                                    )
+                                })
+                            }
+                        </>
+                    }
+
                 </div>
             </section>
 

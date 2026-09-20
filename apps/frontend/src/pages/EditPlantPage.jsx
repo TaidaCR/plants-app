@@ -8,7 +8,6 @@ import CustomInput from '../Components/CustomInput';
 import CustomTextArea from '../Components/CustomTextArea';
 import CustomDatePicker from '../Components/CustomDatePicker';
 import CreatableCombobox from '../Components/CreatableCombobox'
-import Button from '../Components/Button'
 import { getNormalizedLocations } from '../utils/calculationTools'
 
 //Misión: Conseguir los datos y asegurarse de que plant existe. Asi al recargar la página funcionaría
@@ -190,8 +189,18 @@ function PlantForm({ plant }) {
                         : <></>
                     }
                 </section>
-                <Button type="submit">Guardar</Button>
-                <Button to={`/plantdetails/${plant.id}`} className="bg-red-800 text-white">Cancelar</Button>
+                <button
+                    type="submit"
+                    className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl border-2 border-accentStrong text-accentStrong font-medium bg-white shadow-sm hover:bg-accentStrong/10 hover:border-accentStrong active:scale-[0.98] transition-all duration-150 cursor-pointer"
+                >
+                    Guardar
+                </button>
+                <NavLink
+                    to={`/plantdetails/${plant.id}`}
+                    className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl border-2 border-red-400 text-red-600 font-medium bg-white shadow-sm hover:bg-red-50 hover:border-red-500 active:scale-[0.98] transition-all duration-150 cursor-pointer"
+                >
+                    Cancelar
+                </NavLink>
             </form>
         </>
     )

@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react'
 import { useChangeTitle } from '../hooks/setPageTitle.jsx'
 import { usePlantStore } from '../store/usePlantStore.js'
 import ActionPanel from '../Components/ActionPanel.jsx'
-import Button from '../Components/Button.jsx'
 import InfoPill from '../Components/InfoPill.jsx'
 import editImg from '../assets/edit.svg'
 import arrowImg from '../assets/arrowBack.svg'
@@ -224,13 +223,23 @@ export default function PlantDetails() {
                     ""
                 }
             </section>
-            {/* ACCIONES */}
-            <section className="justify-center flex">
-                <Button onClick={() => handleDeletePlant(plant)} className="bg-red-800 w-fit">
-                    <img src={trashImg} className="w-[40px] h-[40px] color-white" />
-                </Button>
-                <ActionPanel plant={plant} lastWateredInDays={lastWateredInDays} lastFertilizedInDays={lastFertilizedInDays} lastTreatedInDays={lastTreatedInDays} />
+            {/* ELIMINAR PLANTA */}
+            <section className="mx-3 mt-4 mb-2">
+                <button
+                    onClick={() => {
+                        if (window.confirm(`¿Eliminar "${plant.name}"? Esta acción no se puede deshacer.`)) {
+                            handleDeletePlant(plant)
+                        }
+                    }}
+                    className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl border-2 border-red-400 text-red-600 font-medium bg-white shadow-sm hover:bg-red-50 hover:border-red-500 active:scale-[0.98] transition-all duration-150 cursor-pointer"
+                >
+                    <img src={trashImg} className="w-5 h-5 text-red-600" alt="" />
+                    <span>Eliminar planta</span>
+                </button>
             </section>
-        </main>
+           {/* ACCIONES */}
+            <section className="justify-center flex">
+                <ActionPanel plant={plant} lastWateredInDays={lastWateredInDays} lastFertilizedInDays={lastFertilizedInDays} lastTreatedInDays={lastTreatedInDays} />
+            </section> </main>
     )
 }

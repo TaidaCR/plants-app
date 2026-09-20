@@ -45,7 +45,8 @@ function App() {
       </div></Loading>}>
         <ScrollToTop />
         <Routes>
-          <Route path="/" element={<LoginPage />}></Route>
+          {/* Cambiarlo y proteger rutas si no user y rutas erroneas */}
+          <Route path="/" element={user ? <HomePage /> : <LoginPage />}></Route>
           <Route path="/userdetails" element={<UserDetailsPage />}></Route>
           <Route path="/home" element={<HomePage />} />
           <Route path="/plantdetails/:id" element={<PlantDetailsPage />} />
